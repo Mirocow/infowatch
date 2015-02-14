@@ -1,0 +1,574 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>InfoWatch GSM Monitor</title>
+	<meta name="description" content="InfoWatch GSM Monitor">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/style.min.css" />
+	<link rel="shortcut icon" type="image/png" href="favicon.ico"/>
+</head>
+<body>
+
+	<div class="modal fade" id="userInfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="myModalLabel">Информация о пользователе</h4>
+				</div>
+				<div class="modal-body">
+					<form id="validate-basic" action="./form-validation.html" data-validate="parsley" class="form parsley-form">
+
+						<table border="0px">
+							<tr>
+								<td width="200px"> 
+									ФИО 
+								</td>
+								<td> 
+									<input type="text" id="name" name="name" class="form-control" data-required="true" value="">
+								</td>
+							</tr>
+							<tr>
+								<td width="200px"> 
+									Группа пользователя
+								</td>
+								<td> 
+									<select id="validateSelect" name="validateSelect" class="form-control" data-required="true">
+										<option value="1" id="1">Сотрудники</option>
+										<option value="2" id="2">Начальники отделов</option>
+									</select>
+								</td>
+							</tr>
+														<tr>
+								<td width="200px"> 
+									Должность 
+								</td>
+								<td> 
+									<input type="text" id="name" name="empty" class="form-control" data-required="true" value="">
+								</td>
+							</tr>
+														<tr>
+								<td width="200px"> 
+									Отдел 
+								</td>
+								<td> 
+									<input type="text" id="name" name="empty" class="form-control" data-required="true" value="">
+								</td>
+							</tr>
+														<tr>
+								<td width="200px"> 
+									Руководитель 
+								</td>
+								<td> 
+									<input type="text" id="name" name="empty" class="form-control" data-required="true" value="">
+								</td>
+							</tr>
+														<tr>
+								<td width="200px"> 
+									Номер телефона 
+								</td>
+								<td> 
+									<input type="text" id="name" name="empty" class="form-control" data-required="true" value="">
+								</td>
+							</tr>
+							<tr>
+								<td width="200px"> 
+									Информация о пользователе
+								</td>
+								<td> 
+									<textarea data-required="false" data-minlength="5" name="info" id="textarea-input" cols="10" rows="2" class="form-control" style="margin: 2px; width: 173px; height: 60px;"></textarea>
+								</td>
+							</tr>
+						</table>
+
+						<div class="form-group">
+
+							<label for="checkbox">Настройки</label>
+
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" name="notify" class="icheck-input">
+									Оповещать о пользователе
+								</label>
+							</div>
+
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" name="p_ignore" class="icheck-input">
+									Заблокировать пользователя
+								</label>
+							</div>
+
+						</div> <!-- /.form-group -->
+
+						<input type="hidden" name="type" id="type" value="">
+
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+					<button type="button" class="btn btn-primary" data-dismiss="modal">Сохранить</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="layout">
+		<div>
+			<section id="header">
+				<header class="layout--header header">
+					<div class="header--wrap navbar">
+						<a href="" class="header--iw_logo"></a>
+					</div>
+				</header>
+			</section>
+
+			<section id="menu">
+				<nav class="layout--nav  main_nav" style="height: 1500px;">
+					<div class="main_nav--wrap">
+						<section class="main_nav--section">
+							<h2>мониторинг</h2>
+							<ul class="main_nav--list">
+								<li><a class="i-nav i-events" href="events.html" title="События">События</a></li>
+							</ul>
+						</section>
+
+						<section class="main_nav--section">
+							<h2>контроль</h2>
+							<ul class="main_nav--list">
+								<li><a class="i-nav i-structure selected" href="users.html" title="Сотрудники">Сотрудники</a></li>
+							</ul>
+						</section>
+
+						<section class="main_nav--section">
+							<h2>настройки</h2>
+							<ul class="main_nav--list">
+								<li><a class="i-nav i-settings" href="settings.html" title="Управление">Управление</a></li>
+							</ul>
+						</section>
+					</div>
+				</nav>
+			</section>
+
+			<section id="layout--wrapper" class="layout--wrapper">
+				<nav class="breadcrumbs">
+					<ul><li class="">
+						<a href="events.html">Сотрудники</a>
+					</li></ul>
+				</nav>
+
+				<section id="layout--sidebar" class="layout--sidebar sidebar ui-resizable" style="display: block; width: 330px; opacity: 1; height: 561px;">
+					<div class="sidebar--content">
+
+																<div class="buttons text-center">
+
+												<div class="btn-group ">
+
+														<button type="button" class="btn btn-default dropdown-toggle" id="addGroup">
+															Добавить
+														</button>
+
+
+													<button type="button" class="btn btn-danger" onClick="deleteNode()">Удалить</button>
+													<button type="button" class="btn btn-info" onClick="renameNode()">Переименовать</button>
+
+												</div>
+
+											</div>
+
+						<div id="jstree">
+							<ul>
+								<li id="root" data-jstree='{"type":"group"}'>Группы
+									<ul>
+										<li data-jstree='{"type":"group"}' group_id="1">Сотрудники
+											<ul>
+												<li data-jstree='{"type":"client"}' user_id="1">Антон</li>
+												<li data-jstree='{"type":"client"}' user_id="2">Артем</li>
+												<li data-jstree='{"type":"client"}' user_id="3">Дмитрий</li>
+												<li data-jstree='{"type":"client"}' user_id="4">Николай</li>
+											</ul>
+										</li>
+										<li data-jstree='{"type":"group"}' group_id="1">Начальники отделов
+											<ul>
+												<li data-jstree='{"type":"client"}' user_id="5">Андрей</li>
+												<li data-jstree='{"type":"client"}' user_id="6">Виктор</li>
+												<li data-jstree='{"type":"client"}' user_id="7">Григорий</li>
+												<li data-jstree='{"type":"client"}' user_id="8">Иван</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</section>
+
+
+				<section id="layout--content" class="layout--content" style="opacity: 1; height: 1000px;"><div><div class="content--table">
+					<div class="content--row">
+						<div class="content_header">
+							
+						Пользователи
+
+						</div>
+						</div>
+
+						<div class="content--row">
+
+							<div class="table-responsive" style="margin-top: 20px;">
+
+																			<div class="btn-group ">
+
+														<button type="button" class="btn btn-default dropdown-toggle" id="addUserToDB">
+															Добавить
+														</button>
+
+
+													<button type="button" class="btn btn-danger" onClick="deleteUser()">Удалить</button>
+													<button type="button" class="btn btn-info" onClick="userInfo()">Изменить</button>
+
+												</div>
+
+							<table id="user-signups" class="table table-bordered table-highlight table-hover" style="margin-top: 10px;">
+								<thead>
+									<tr>
+										<th class="hidden-xs">ФИО</th>
+										<th>Группа</th>
+										<th>Должность</th>
+										<th>Отдел</th>
+										<th>Руководитель</th>
+										<th>Номер телефона</th>
+									</tr>
+								</thead>
+
+								<tbody>
+
+									<tr>
+										<td>Артем</td>
+										<td>Сотрудники</td>
+										<td>Инженер</td>
+										<td>Безопасность</td>
+										<td>Андрей</td>
+										<td>+79168246285</td>
+									</tr>
+									<tr>
+										<td>Иван</td>
+										<td>Начальники отделов</td>
+										<td>Менеджер по продажам</td>
+										<td>Маркетинговый</td>
+										<td>Виктор</td>
+										<td>+79851936296</td>
+									</tr>
+									<tr>
+										<td>Андрей</td>
+										<td>Начальники отделов</td>
+										<td>Главный инженер</td>
+										<td>Безопасность</td>
+										<td>Виктор</td>
+										<td>+79169482047</td>
+									</tr>
+									<tr>
+										<td>Николай</td>
+										<td>Сотрудники</td>
+										<td>Консультант</td>
+										<td>Маркетинговый</td>
+										<td>Иван</td>
+										<td>+79168250174</td>
+									</tr>
+									<tr>
+										<td>Дмитрий</td>
+										<td>Сотрудники</td>
+										<td>Инженер</td>
+										<td>Безопасность</td>
+										<td>Андрей</td>
+										<td>+79194027516</td>
+									</tr>
+									<tr>
+										<td>Антон</td>
+										<td>Сотрудники</td>
+										<td>Консультант</td>
+										<td>Маркетинговый</td>
+										<td>Иван</td>
+										<td>+79163810275</td>
+									</tr>
+									<tr>
+										<td>Виктор</td>
+										<td>Начальники отделов</td>
+										<td>Директор</td>
+										<td>Руководство</td>
+										<td>Григорий</td>
+										<td>+79857201735</td>
+									</tr>
+									<tr>
+										<td>Григорий</td>
+										<td>Начальники отделов</td>
+										<td>Глава компании</td>
+										<td>Руководство</td>
+										<td>Нет</td>
+										<td>+79856820471</td>
+									</tr>
+
+							</tbody>
+
+						</table>
+
+
+					</div> <!-- /.table-responsive -->
+
+						</div>
+					</div>
+				</div></div></section>
+
+			</section>
+
+		</div>
+	</div>
+
+	<script src="js/jquery-2.1.1.min.js"></script>
+	<script src="js/jquery-ui.js"></script>
+
+	<script src="js/jstree.js"></script>
+	<script src="js/bootstrap.js"></script>
+
+
+	<script>
+
+
+	$(document).on("click", "#user-signups tr", function(e) {
+
+	/* Create 'click' event handler for rows */
+	var rows = $('tr').not(':first');
+
+	/* Get current row */
+	var row = $(this);
+	if (row.hasClass('highlighted_row')) {
+		row.removeClass("highlighted_row");
+	} else {
+		rows.removeClass('highlighted_row');
+		row.addClass('highlighted_row');
+	}
+
+});
+
+$(document).on("dblclick", "#user-signups tr", function(e) {
+	var row = $(this);
+	row.addClass("edit");
+      // alert(row.attr("id"));
+      if (row.find('td:eq(0)').html() != "Не определено") {
+      	$('input[name="name"]').val(row.find('td:eq(0)').html());
+      	$('textarea[name="info"]').val(row.find('td:eq(0)'))
+      	$('textarea').val(row.children('input[name="info"]').val());
+      	if (row.children('input[name="notify"]').val() == true || row.children('input[name="notify"]').val() == "true") {
+      		$('.checkbox label input[name="notify"]').iCheck('check');
+      	}
+      	if (row.children('input[name="p_ignore"]').val() == true || row.children('input[name="p_ignore"]').val() == "true") {
+      		$('.checkbox label input[name="p_ignore"]').iCheck('check');
+      	}
+      	$('input[name="type"]').val("old");
+      } else {
+      	$('input[name="name"]').val();
+      	$('input[name="type"]').val("new");
+      }
+      $('input[name="id"]').val(row.find('td:eq(2)').html());
+      $("#validateSelect option").filter(function() {
+            //may want to use $.trim in here
+            return $(this).attr("id") == row.children('input[name="group_id"]').val();
+        }).prop('selected', true);
+      $('#userInfo').modal('show');
+  });
+
+$(function() {
+    /* This 'event' is used just to avoid that the table text
+     * gets selected (just for styling).
+     * For example, when pressing 'Shift' keyboard key and clicking
+     * (without this 'event') the text of the 'table' will be selected.
+     * You can remove it if you want, I just tested this in
+     * Chrome v30.0.1599.69 */
+     $(document).bind('selectstart dragstart', function(e) {
+     	e.preventDefault(); return false;
+     });
+ });
+
+function userInfo() {
+	if ($('tr').hasClass('highlighted_row')) {
+		var row = $('tr.highlighted_row');
+		row.addClass("edit");
+		if (row.find('td:eq(0)').html() != "Не определено") {
+			$('input[name="name"]').val(row.find('td:eq(0)').html());
+			$('textarea').val($('.highlighted_row input[name="info"]').val());
+			if ($('.highlighted_row input[name="notify"]').val() == true || $('.highlighted_row input[name="notify"]').val() == "true") {
+				$('.checkbox label input[name="notify"]').iCheck('check');
+			}
+			if ($('.highlighted_row input[name="p_ignore"]').val() == true || $('.highlighted_row input[name="p_ignore"]').val() == "true") {
+				$('.checkbox label input[name="p_ignore"]').iCheck('check');
+			}
+			$('input[name="type"]').val("old");
+		} else {
+			$('input[name="name"]').val();
+			$('input[name="type"]').val("new");
+		}
+		$('input[name="id"]').val(row.find('td:eq(2)').html());
+		$("#validateSelect option").filter(function() {
+        //may want to use $.trim in here
+        return $(this).attr("id") == row.children('input[name="group_id"]').val();
+    }).prop('selected', true);
+		$('#userInfo').modal('show');
+
+	} else {
+		alert("Выберите пользователя из таблицы");
+	}
+}
+
+
+
+					function deleteNode() {
+						var tree = $("#jstree").jstree(true);
+						$node = tree.get_selected()[0];
+						if ($node != "root") {
+							tree.delete_node($node);
+						} else {
+							alert("Вы не можете удалить корневую папку!");
+						}
+					}
+
+					function renameNode() {
+						var tree = $("#jstree").jstree(true);
+						$node = tree.get_selected()[0];
+						if ($node != "root") {
+							tree.edit($node);
+						} else {
+							alert("Вы не можете переименовать корневую папку!");
+						}
+					}
+
+					$('#addUser').click(function() {
+						var tree = $("#jstree").jstree(true);
+						$node = tree.get_selected(true)[0];
+						$node = tree.create_node($node, {"li_attr": {"type": "user", "parent": $node.li_attr.group_id}});
+						tree.set_type($node, "client");
+						tree.edit($node, "Новый пользователь");
+					});
+
+					$('#addGroup').click(function() {
+						var tree = $("#jstree").jstree(true);
+						$node = tree.get_selected(true)[0];
+						$node = tree.create_node($node, {"li_attr": {"type": "group", "parent": $node.li_attr.group_id}});
+						tree.set_type($node, "group");
+						tree.edit($node, "Новая группа");
+					});
+
+					$(function () {
+						$('#jstree').jstree({
+							"plugins":["types","dnd", "contextmenu"],
+							"core": {
+								"check_callback" : true,
+								"expand_selected_onload" : true
+							},
+							"contextmenu" : {
+    "items": function($node) { // Could be a function that should return an object like this one
+    	var tree = $("#jstree").jstree(true);
+    	return {
+    		"create" : {
+    			"separator_before"  : false,
+    			"separator_after"   : true,
+    			"label"             : "Добавить",
+    			"action"            : false,
+    			"submenu" :{
+    				"create_file" : {
+    					"seperator_before" : false,
+    					"seperator_after" : false,
+    					"label" : "Группу",
+    					action : function (obj) {
+    						$node = tree.create_node($node, {"li_attr": {"type": "group", "parent": $node.li_attr.group_id}});
+    						tree.set_type($node, "group");
+    						tree.set_text($node, "Новая группа");
+    						tree.edit($node);
+    					}
+    				},
+    				"create_folder" : {
+    					"seperator_before" : false,
+    					"seperator_after" : false,
+    					"label" : "Пользователя",
+    					action : function (obj) {
+    						$node = tree.create_node($node, {"li_attr": {"type": "user", "parent": $node.li_attr.group_id}});
+    						tree.set_text($node, "Новый пользователь");
+    						tree.set_type($node, "client");
+    						tree.edit($node);
+    					}
+    				}
+    			}
+    		},
+    		"renameItem": {
+    			label: "Переименовать",
+    			action: function (obj) {
+    				$node = tree.get_selected()[0];
+    				if ($node != "root") {
+    					tree.edit($node);
+    				} else {
+    					alert("Вы не можете переименовать корневую папку!");
+    				}
+    			}
+    		},
+
+    		"deleteItem": {
+    			label: "Удалить",
+    			action: function (obj) {
+    				$node = tree.get_selected()[0];
+    				if ($node != "root") {
+    					tree.delete_node($node);
+    				} else {
+    					alert("Вы не можете удалить корневую папку!");
+    				}
+    			},
+    			"separator_after": true
+
+    		},
+    		"change": {
+    			"label"             : "Изменить",
+    			"action"            : false,
+    			"submenu" :{
+    				copyItem: {
+    					label: "Копировать",
+    					action: function (obj) {  $($node).addClass("copy");  return {copyItem: tree.copy($node)  }; }
+    				},
+    				cutItem: {
+    					label: "Вырезать",
+    					action: function (obj) { $($node).addClass("cut");  return {cutItem: tree.cut($node)  }; }
+    				},
+    				pasteItem: {
+    					label: "Вставить",
+    					action: function (obj) {  $($node).addClass("paste");    return {pasteItem: tree.paste($node) }; }
+    				}
+    			}
+    		}
+    	}
+    }
+},
+"types" : {
+	"group" : {
+		"icon": "./css/folder_tm.png",
+		max_depth: 5
+	},
+	"client" : {
+		"max_children" : 0,
+		"icon": "./css/user.png"
+	}
+},
+})
+.on('ready.jstree rename_node.jstree delete_node.jstree', function(event, data) {
+	var type = event.type;
+	if (type === "ready") {
+		$("#jstree").jstree('open_all');
+	}
+})
+.bind("dblclick.jstree", function () {
+	var tree = $("#jstree").jstree(true);
+	var node = $(event.target).closest("li");
+	var data = node.data("jstree");
+	tree.edit(node,data);
+});
+});
+</script>
+
+</body>
+</html>

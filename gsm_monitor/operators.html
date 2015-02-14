@@ -1,0 +1,218 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>InfoWatch GSM Monitor</title>
+	<meta name="description" content="InfoWatch GSM Monitor">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/font-awesome.min.css">
+	<link rel="shortcut icon" type="image/png" href="favicon.ico"/>
+</head>
+<body>
+	<div class="layout">
+		<div>
+			<section id="header">
+				<header class="layout--header header">
+					<div class="header--wrap navbar">
+						<a href="" class="header--iw_logo"></a>
+					</div>
+				</header>
+			</section>
+
+			<section id="menu">
+				<nav class="layout--nav  main_nav" style="height: 1500px;">
+					<div class="main_nav--wrap">
+						<section class="main_nav--section">
+							<h2>мониторинг</h2>
+							<ul class="main_nav--list">
+								<li><a class="i-nav i-events" href="events.html" title="События">События</a></li>
+							</ul>
+						</section>
+
+						<section class="main_nav--section">
+							<h2>контроль</h2>
+							<ul class="main_nav--list">
+								<li><a class="i-nav i-structure" href="users.html" title="Сотрудники">Сотрудники</a></li>
+							</ul>
+						</section>
+
+						<section class="main_nav--section">
+							<h2>настройки</h2>
+							<ul class="main_nav--list">
+								<li><a class="i-nav i-settings selected" href="settings.html" title="Управление">Управление</a></li>
+							</ul>
+						</section>
+					</div>
+				</nav>
+			</section>
+
+			<section id="layout--wrapper" class="layout--wrapper">
+				<nav class="breadcrumbs">
+					<ul><li class="">
+					<a href="events.html">Управление</a>
+					</li></ul>
+				</nav>
+
+				<div class="settings">
+					<nav class="settings--nav">
+						<ul id="tm-settings-tabs" style="height: 100px; margin-left: -40px; margin-top: 0px;">
+						<li>
+						<a href="settings.html">
+						 <i class="fa fa-cloud"></i> 
+						 Cетевые настройки</a>
+						</li>
+						<li class="active">
+						<a href="operators.html" data-bypass="" data-tab-id="access"><i class="fa fa-mobile fa-1g"></i> Операторы</a></li>
+						<li><a href="gsm.html" data-bypass="" data-tab-id="license"><i class="fa fa-wifi"></i> Настройки GSM</a></li>
+						<li><a href="status.html" data-bypass="" data-tab-id="healthcheck"><i class="fa fa-heart"></i> Состояние системы</a></li></ul>
+					</nav>
+					<section id="tm-settings-tab-content" class="settings--content" style="height: 1000px;"><div><section>
+						<div class="settings--wrapper">
+							<h2 class="settings--header">Операторы</h2>
+							<p class="settings--header-subtitle">Настройка операторов GSM сети. Выбор используемого оператора.</p>
+							<div class="settings--aside">
+
+							<table border="0px" style="background-color: transparent; margin-bottom: 35px;">
+							<tr>
+								<td width="200px"> 
+									Текущий оператор: 
+								</td>
+								<td> 
+																		<select id="validateSelect" name="validateSelect" class="form-control" data-required="true">
+										<option value="1" id="1">МТС</option>
+										<option value="2" id="2">Билайн</option>
+										<option value="2" id="3">Мегафон</option>
+									</select>								</td>
+							</tr>
+							</table>
+
+
+												<div class="btn-group ">
+
+														<button type="button" class="btn btn-default dropdown-toggle" id="addGroup">
+															Добавить
+														</button>
+
+
+													<button type="button" class="btn btn-danger" onClick="deleteNode()">Удалить</button>
+
+												</div>
+
+                                                    <table cellpadding="0" cellspacing="0" border="0" class="table table-bordered" id="operators" width="100%" style="margin-top: 10px;">
+
+                                                        <thead>
+
+                                                        <tr>
+
+                                                            <th>Имя оператора</th>
+                                                            <th>MCC</th>
+                                                            <th>MNC</th>
+                                                            <th>ARFCN</th>
+
+                                                        </tr>
+
+                                                        </thead>
+
+                                                        <tr>
+
+                                                            <td>
+
+                                                                <a class="operator" href="#" id="name" data-type="text" data-title="Введите название оператора">МТС</a>
+
+                                                            </td>
+
+                                                            <td>
+
+                                                                <a class="operator" href="#" id="MCC" data-type="text" data-title="Введите код страны">250</a>
+
+                                                            </td>
+
+                                                            <td>
+
+                                                                <a class="operator" href="#" id="MNC" data-type="text" data-title="Введите код оператора">01</a>
+
+                                                            </td>
+
+                                                            <td>
+
+                                                                <a class="operator" href="#" id="ARFCN" data-type="text" data-title="Введите ARFCN">23</a>
+
+                                                            </td>
+
+                                                        </tr>
+
+                                                                                                                <tr>
+
+                                                            <td>
+
+                                                                <a class="operator" href="#" id="name" data-type="text" data-title="Введите название оператора">Билайн</a>
+
+                                                            </td>
+
+                                                            <td>
+
+                                                                <a class="operator" href="#" id="MCC" data-type="text" data-title="Введите код страны">250</a>
+
+                                                            </td>
+
+                                                            <td>
+
+                                                                <a class="operator" href="#" id="MNC" data-type="text" data-title="Введите код оператора">99</a>
+
+                                                            </td>
+
+                                                            <td>
+
+                                                                <a class="operator" href="#" id="ARFCN" data-type="text" data-title="Введите ARFCN">14</a>
+
+                                                            </td>
+
+                                                        </tr>
+
+                                                                                                                <tr>
+
+                                                            <td>
+
+                                                                <a class="operator" href="#" id="name" data-type="text" data-title="Введите название оператора">Мегафон</a>
+
+                                                            </td>
+
+                                                            <td>
+
+                                                                <a class="operator" href="#" id="MCC" data-type="text" data-title="Введите код страны">250</a>
+
+                                                            </td>
+
+                                                            <td>
+
+                                                                <a class="operator" href="#" id="MNC" data-type="text" data-title="Введите код оператора">02</a>
+
+                                                            </td>
+
+                                                            <td>
+
+                                                                <a class="operator" href="#" id="ARFCN" data-type="text" data-title="Введите ARFCN">43</a>
+
+                                                            </td>
+
+                                                        </tr>
+
+                                                                            <tr>
+                    </tr>
+
+                                                    </table>
+
+                                                    <center><input class="btn btn-primary" style="width: 219px" type="submit" value="Сохранить" onclick="" /></center>
+
+
+							</div>
+							<div class="settings--wrap" id="server_settings"></div>
+						</div>
+					</section></div></section>
+				</div>
+
+			</section>
+
+		</div>
+	</div>
+</body>
+</html>
