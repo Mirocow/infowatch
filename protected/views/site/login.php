@@ -26,7 +26,7 @@ $this->breadcrumbs=array(
             <div class="form-group">
                 <?php echo $form->labelEx($model,'username', ['class' => 'col-md-3']); ?>
                 <div class="col-md-9">
-                    <?php echo $form->passwordField($model,'username', ['class' => 'form-control']); ?>
+                    <?php echo $form->textField($model,'username', ['class' => 'form-control']); ?>
                 </div>
             </div>
 
