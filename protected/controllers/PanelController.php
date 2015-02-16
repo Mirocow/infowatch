@@ -9,6 +9,7 @@
 class PanelController extends Controller {
 
     public $layout = 'panel';
+    public $active = 'index';
 
     public function actionIndex()
     {
@@ -20,19 +21,34 @@ class PanelController extends Controller {
             'condition' => 'created >= UNIX_TIMESTAMP() - 5*60 AND person_id IS NOT NULL', // 5 mins
         ]);
 
+        $this->active = 'index';
         $this->render('index', compact('unknownDevices', 'knownDevices'));
     }
 
     public function actionPersons()
     {
-        $persons = Person::model()->findAll([
-            'order' => 'group_id',
-        ]);
-        $this->render('persons', compact('persons'));
+        $persons = [];
+
+        $groups = Group::model()->findAll();
+
+        foreach($groups as $group)
+        {
+            $newGroup['group'] = $group;
+            $newGroup['persons'] = Person::model()->findAllByAttributes(['group_id' => $group->getPrimaryKey()]);
+
+            $persons[] = $newGroup;
+        }
+        
+        $allPersons = Person::model()->findAll();
+
+        $this->active = 'persons';
+        $this->render('persons', compact('persons', 'allPersons'));
     }
 
     public function actionSettings()
     {
-        $this->render('settings');
+        $operators = Operator::model()->findAll();
+        $this->active = 'settings';
+        $this->render('settings', compact('operators'));
     }
 }

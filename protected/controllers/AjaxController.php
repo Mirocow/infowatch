@@ -69,6 +69,13 @@ class AjaxController extends Controller
             Group::model()->deleteByPk($_POST['id']);
         }
     }
+    public function actionDeleteOperator()
+    {
+        if(isset($_POST['id']))
+        {
+            Operator::model()->deleteByPk($_POST['id']);
+        }
+    }
 
     public function actionMovePerson()
     {
@@ -80,6 +87,37 @@ class AjaxController extends Controller
                 $person->group_id = $_POST['newParent'];
                 $person->save();
             }
+        }
+    }
+
+
+    public function actionGetPerson()
+    {
+        if(isset($_POST['id']))
+        {
+            $person = Person::model()->findByPk($_POST['id']);
+            if($person)
+                echo json_encode($person->attributes);
+        }
+    }
+    public function actionSavePerson()
+    {
+        if(isset($_POST['Person']))
+        {
+            $person = Person::model()->findByPk($_POST['Person']['id']);
+            $person->attributes = $_POST['Person'];
+            $person->save();
+            echo json_encode($person->attributes);
+        }
+    }
+    public function actionSaveOperator()
+    {
+        if(isset($_POST['Operator']))
+        {
+            $operator = new Operator();
+            $operator->attributes = $_POST['Operator'];
+            $operator->save();
+            echo json_encode($operator->attributes);
         }
     }
 }

@@ -10,6 +10,7 @@
  * @property string $department
  * @property string $boss
  * @property string $phone
+ * @property string $imsi
  * @property string $info
  * @property integer $group_id
  *
@@ -36,11 +37,11 @@ class Person extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('group_id', 'numerical', 'integerOnly'=>true),
-			array('job, department, boss, phone', 'length', 'max'=>45),
+			array('job, department, boss, phone, imsi', 'length', 'max'=>45),
 			array('name, info', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, name, job, department, boss, phone, info, group_id', 'safe', 'on'=>'search'),
+			array('id, name, job, department, boss, phone, imsi, info, group_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -69,6 +70,7 @@ class Person extends CActiveRecord
 			'department' => 'Department',
 			'boss' => 'Boss',
 			'phone' => 'Phone',
+			'imsi' => 'Imsi',
 			'info' => 'Info',
 			'group_id' => 'Group',
 		);
@@ -98,6 +100,7 @@ class Person extends CActiveRecord
 		$criteria->compare('department',$this->department,true);
 		$criteria->compare('boss',$this->boss,true);
 		$criteria->compare('phone',$this->phone,true);
+		$criteria->compare('imsi',$this->imsi,true);
 		$criteria->compare('info',$this->info,true);
 		$criteria->compare('group_id',$this->group_id);
 

@@ -7,93 +7,142 @@
  */
 
 /* @var $persons Person[] */
+/* @var $allPersons Person[] */
 ?>
 
-<div class="col-md-4">
-    <div class="row">
-        <!--<div class="col-md-12" style="margin-bottom: 20px;">
-            <button type="button" class="btn btn-default" onclick="demo_create();"><i class="glyphicon glyphicon-asterisk"></i> Добавить</button>
-            <button type="button" class="btn btn-default" onclick="demo_rename();"><i class="glyphicon glyphicon-pencil"></i> Переименовать</button>
-            <button type="button" class="btn btn-default" onclick="demo_delete();"><i class="glyphicon glyphicon-remove"></i> Удалить</button>
-        </div>-->
+<div class="content col-md-11">
+    <div class="col-md-4">
         <div class="row">
-            <div class="col-md-12">
-                <div id="jstree">
-                    <ul>
-                        <li id="root" data-jstree='{"type":"root"}'>Группы
-                            <ul>
-                                <?php foreach($persons as $personNumber => $person): ?>
-                                    <?php if($personNumber == 0): ?>
-                                        <li data-jstree='{"type":"group"}' group_id="<?=$person->group->id;?>"><?=$person->group->name;?><ul>
-                                    <?php elseif($persons[$personNumber - 1]->group->name !== $person->group->name): ?>
-                                        </ul></li><li data-jstree='{"type":"group"}' group_id="<?=$person->group->id;?>"><?=$person->group->name;?><ul>
-                                    <?php endif; ?>
-                                    <li data-jstree='{"type":"person"}' person_id="<?=$person->id;?>"><?=$person->name;?></li>
-                                <?php endforeach;?>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="jstree">
+                        <ul>
+                            <li id="root" data-jstree='{"type":"root"}'>Группы
+                                <ul>
+                                    <?php foreach($persons as $group): ?>
+                                        <li data-jstree='{"type":"group"}' group_id="<?=$group['group']->id;?>"><?=$group['group']->name;?>
+                                            <ul>
+                                                <?php foreach($group['persons'] as $person): ?>
+                                                    <li data-jstree='{"type":"person"}' person_id="<?=$person->id;?>"><?=$person->name;?></li>
+                                                <?php endforeach;?>
+                                            </ul>
+                                        </li>
+                                    <?php endforeach;?>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
+
     </div>
 
-</div>
+    <div class="col-md-8">
 
-<div class="col-md-8">
-
-    <div class="col-md-12" style="margin-bottom: 20px;">
-        <button type="button" class="btn btn-default" id="edit-person" disabled="disabled"><i class="glyphicon glyphicon-pencil"></i> Изменить</button>
-        <button type="button" class="btn btn-default" id="remove-person" disabled="disabled"><i class="glyphicon glyphicon-remove"></i> Удалить</button>
-    </div>
-    <table class="table persons-table">
-        <thead>
-        <tr>
-            <th>ФИО</th>
-            <th>Должность</th>
-            <th>Отдел</th>
-            <th>Руководитель</th>
-            <th>Номер телефона</th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php foreach($persons as $person): ?>
-            <tr class="person-row" person-id="<?=$person->id;?>">
-                <td><?=$person->name;?></td>
-                <td><?=$person->job;?></td>
-                <td><?=$person->department;?></td>
-                <td><?=$person->boss;?></td>
-                <td><?=$person->phone;?></td>
+        <div class="col-md-12" style="margin-bottom: 20px;">
+            <button type="button" class="btn btn-default" id="edit-person" disabled="disabled"><i class="glyphicon glyphicon-pencil"></i> Изменить</button>
+            <button type="button" class="btn btn-default" id="remove-person" disabled="disabled"><i class="glyphicon glyphicon-remove"></i> Удалить</button>
+        </div>
+        <table class="table persons-table">
+            <thead>
+            <tr>
+                <th>ФИО</th>
+                <th>Должность</th>
+                <th>Отдел</th>
+                <th>Руководитель</th>
+                <th>Номер телефона</th>
             </tr>
-        <?php endforeach; ?>
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+            <?php foreach($allPersons as $person): ?>
+                <tr class="person-row" person-id="<?=$person->id;?>">
+                    <td><?=$person->name;?></td>
+                    <td><?=$person->job;?></td>
+                    <td><?=$person->department;?></td>
+                    <td><?=$person->boss;?></td>
+                    <td><?=$person->phone;?></td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
 
-<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-    Launch demo modal
-</button>
+    <!-- Modal -->
+    <div class="modal fade" id="editPersonModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="editPersonModalLabel"></h4>
+                </div>
+                <?php
+                $person = new Person();
+                $form=$this->beginWidget('CActiveForm', array(
+                    'id'=>'edit-person-form',
+                    'enableClientValidation'=>true,
+                    'clientOptions'=>array(
+                        'validateOnSubmit'=>true,
+                    ),
+                    'htmlOptions' => ['class' => 'form-horizontal']
+                )); ?>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <?php echo $form->labelEx($person,'name', ['class' => 'col-md-3 control-label']); ?>
+                            <div class="col-md-9">
+                                <?php echo $form->textField($person,'name', ['class' => 'form-control', 'id' => 'person_name']); ?>
+                            </div>
+                        </div>
 
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
-            </div>
-            <div class="modal-body">
-                ...
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                        <div class="form-group">
+                            <?php echo $form->labelEx($person,'job', ['class' => 'col-md-3 control-label']); ?>
+                            <div class="col-md-9">
+                                <?php echo $form->textField($person,'job', ['class' => 'form-control', 'id' => 'person_job']); ?>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <?php echo $form->labelEx($person,'department', ['class' => 'col-md-3 control-label']); ?>
+                            <div class="col-md-9">
+                                <?php echo $form->textField($person,'department', ['class' => 'form-control', 'id' => 'person_department']); ?>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <?php echo $form->labelEx($person,'boss', ['class' => 'col-md-3 control-label']); ?>
+                            <div class="col-md-9">
+                                <?php echo $form->textField($person,'boss', ['class' => 'form-control', 'id' => 'person_boss']); ?>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <?php echo $form->labelEx($person,'phone', ['class' => 'col-md-3 control-label']); ?>
+                            <div class="col-md-9">
+                                <?php echo $form->textField($person,'phone', ['class' => 'form-control', 'id' => 'person_phone']); ?>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <?php echo $form->labelEx($person,'imsi', ['class' => 'col-md-3 control-label']); ?>
+                            <div class="col-md-9">
+                                <?php echo $form->textField($person,'imsi', ['class' => 'form-control', 'id' => 'person_imsi']); ?>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <?php echo $form->labelEx($person,'info', ['class' => 'col-md-3 control-label']); ?>
+                            <div class="col-md-9">
+                                <?php echo $form->textArea($person,'info', ['class' => 'form-control', 'id' => 'person_info']); ?>
+                            </div>
+                        </div>
+                        <?php echo $form->textArea($person,'id', ['class' => 'form-control', 'style' => 'display: none;', 'id' => 'person_id']); ?>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                        <button type="button" class="btn btn-primary" id="save-person">Сохранить</button>
+                    </div>
+                <?php $this->endWidget(); ?>
             </div>
         </div>
     </div>
 </div>
-
 <script>
     $(document).on('click', '.person-row', function(e){
         $(this).parent().find('.person-row').removeClass('active');
@@ -118,7 +167,58 @@
             ).done(function(response){
                     $('li[person_id=' + personId + ']').remove();
                     $('.persons-table tbody tr.active').remove();
+                    $('#remove-person').attr('disabled', 'disabled');
                 });
+        });
+        $('#edit-person').click(function(){
+            var currentPerson = $('.persons-table tbody tr.active');
+            var personId = $('.persons-table tbody tr.active').attr('person-id');
+
+            $.post(
+                Yii.app.createUrl('/ajax/getPerson'),
+                {
+                    id: personId
+                }
+            ).done(function (response) {
+                    response = JSON.parse(response);
+
+                    $('#person_name').val(response.name);
+                    $('#person_job').val(response.job);
+                    $('#person_department').val(response.department);
+                    $('#person_boss').val(response.boss);
+                    $('#person_phone').val(response.phone);
+                    $('#person_imsi').val(response.imsi);
+                    $('#person_info').val(response.info);
+                    $('#person_id').val(personId);
+
+                    $('#editPersonModal').modal('show');
+                });
+        });
+        $('#save-person').click(function(){
+            var form = new FormData($('#edit-person-form')[0]);
+
+            var request = $.ajax({
+                url: Yii.app.createUrl('/ajax/savePerson'),
+                type: "POST",
+                processData: false,
+                cache: false,
+                contentType: false,
+                data: form
+            });
+            request.done(function(response) {
+                response = JSON.parse(response);
+                var destination = $('.persons-table tbody tr.active');
+
+                $(destination).find('td:eq(0)').html(response.name);
+                $(destination).find('td:eq(1)').html(response.job);
+                $(destination).find('td:eq(2)').html(response.department);
+                $(destination).find('td:eq(3)').html(response.boss);
+                $(destination).find('td:eq(4)').html(response.phone);
+
+                $('#jstree li[person_id=' + response.id + '] a').html('<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image: url(<?=Yii::app()->request->baseUrl?>/img/user.png); background-size: auto; background-position: 50% 50%;"></i>' + response.name);
+
+                $('#editPersonModal').modal('hide');
+            });
         });
     });
 </script>
