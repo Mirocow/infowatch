@@ -246,7 +246,7 @@
         $('#remove-operator').removeAttr('disabled');
 
     });
-
+//
     $(document).ready(function(){
         $('#addOperator').click(function(){
             $('#operator-form input').val('');
