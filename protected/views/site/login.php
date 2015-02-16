@@ -17,21 +17,21 @@ $this->breadcrumbs=array(
 	),
     'htmlOptions' => ['class' => 'form-horizontal', 'style' => 'margin-top: 160px;']
 )); ?>
-<div class="col-md-6 col-md-offset-3">
+<div class="col-md-4 col-md-offset-4">
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="panel-title text-center">Вход</div>
         </div>
         <div class="panel-body">
             <div class="form-group">
-                <?php echo $form->labelEx($model,'username', ['class' => 'col-md-3']); ?>
+                <?php echo $form->labelEx($model,'username', ['class' => 'col-md-3 control-label']); ?>
                 <div class="col-md-9">
                     <?php echo $form->textField($model,'username', ['class' => 'form-control']); ?>
                 </div>
             </div>
 
             <div class="form-group">
-                <?php echo $form->labelEx($model,'password', ['class' => 'col-md-3']); ?>
+                <?php echo $form->labelEx($model,'password', ['class' => 'col-md-3 control-label']); ?>
                 <div class="col-md-9">
                     <?php echo $form->passwordField($model,'password', ['class' => 'form-control']); ?>
                 </div>
