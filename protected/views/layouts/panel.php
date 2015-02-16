@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/fw/jstree/themes/default/style.min.css">
 	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/main.css">
 	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/raw.css">
+	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/my.css">
 
     <script type="application/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/fw/jquery.js"></script>
     <script type="application/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/fw/bootstrap/js/bootstrap.min.js"></script>
