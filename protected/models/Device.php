@@ -65,11 +65,11 @@ class Device extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'imei' => 'Imei',
-			'imsi' => 'Imsi',
+			'imei' => 'IMEI',
+			'imsi' => 'IMSI',
 			'created' => 'Created',
-			'mnc_id' => 'Mnc',
-			'tac_id' => 'Tac',
+			'mnc_id' => 'MNC',
+			'tac_id' => 'TAC',
 			'person_id' => 'Person',
 		);
 	}

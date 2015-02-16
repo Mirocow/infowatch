@@ -53,10 +53,10 @@ class Operator extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'name' => 'Name',
-			'mcc' => 'Mcc',
-			'mnc' => 'Mnc',
-			'arfcn' => 'Arfcn',
+			'name' => 'Названия',
+			'mcc' => 'MCC',
+			'mnc' => 'MNC',
+			'arfcn' => 'ARFCN',
 		);
 	}
 

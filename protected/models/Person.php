@@ -65,14 +65,14 @@ class Person extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'name' => 'Name',
-			'job' => 'Job',
-			'department' => 'Department',
-			'boss' => 'Boss',
-			'phone' => 'Phone',
-			'imsi' => 'Imsi',
-			'info' => 'Info',
-			'group_id' => 'Group',
+			'name' => 'ФИО',
+			'job' => 'Должность',
+			'department' => 'Отдел',
+			'boss' => 'Начальник',
+			'phone' => 'Телефон',
+			'imsi' => 'IMSI',
+			'info' => 'Информация',
+			'group_id' => 'Группа',
 		);
 	}
 
