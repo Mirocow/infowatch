@@ -38,7 +38,7 @@ $this->breadcrumbs=array(
             </div>
 
             <div class="text-center col-md-12">
-                <?php echo CHtml::submitButton('Login', ['class' => 'btn btn-default']); ?>
+                <?php echo CHtml::submitButton('Войти', ['class' => 'btn btn-default']); ?>
             </div>
         </div>
     </div>
