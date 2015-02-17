@@ -44,16 +44,14 @@
             <table class="table table-striped table-hover ">
                 <thead>
                 <tr>
-                    <th>IMEI</th>
-                    <th>IMSI</th>
+                    <th>ID</th>
                     <th>Дата</th>
                 </tr>
                 </thead>
                 <tbody>
                 <?php foreach($unknownDevices as $device): ?>
                     <tr>
-                        <td><?=$device->imei;?></td>
-                        <td><?=$device->imsi;?></td>
+                        <td><?=md5($device->imsi);?></td>
                         <td><?=date('Y-m-d H:i:s',$device->created);?></td>
                     </tr>
                 <?php endforeach; ?>

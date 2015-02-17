@@ -20,4 +20,12 @@ class Controller extends CController
 	 * for more details on how to specify this property.
 	 */
 	public $breadcrumbs=array();
+
+
+    public function countOnline()
+    {
+        return Device::model()->count([
+                'condition' => 'created >= UNIX_TIMESTAMP() - 5*60 AND person_id IS NOT NULL', // 5 mins
+            ]);
+    }
 }
