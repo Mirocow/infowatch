@@ -29,22 +29,36 @@ class PanelController extends Controller {
     {
         $persons = [];
 
-        $groups = Group::model()->findAll();
+        $groups = Group::model()->findAllByAttributes(['parent_id' => null]);
 
-        foreach($groups as $group)
-        {
-            $newGroup['group'] = $group;
-            $newGroup['persons'] = Person::model()->findAllByAttributes(['group_id' => $group->getPrimaryKey()]);
-
-            $persons[] = $newGroup;
-        }
+        $tree = $this->displayTree($groups);
         
         $allPersons = Person::model()->findAll();
 
         $this->active = 'persons';
-        $this->render('persons', compact('persons', 'allPersons'));
+        $this->render('persons', compact('persons', 'allPersons', 'tree'));
     }
 
+    public function displayTree($groups)
+    {
+        $return = '';
+        foreach($groups as $group)
+        {
+            $return .= '<li data-jstree=\'{"type":"group"}\' group_id="'.$group->id.'">'.$group->name;
+            if((Group::model()->countByAttributes(['parent_id' => $group->id]) + Person::model()->countByAttributes(['group_id' => $group->id])) > 0)
+            {
+                $return .= '<ul>';
+                foreach(Person::model()->findAllByAttributes(['group_id' => $group->id]) as $person)
+                {
+                    $return .= '<li data-jstree=\'{"type":"person"}\' person_id="'.$person->id.'">'.$person->name.'</li>';
+                }
+                $return .= $this->displayTree(Group::model()->findAllByAttributes(['parent_id' => $group->id]));
+                $return .= '</ul>';
+            }
+        }
+
+        return $return;
+    }
     public function actionSettings()
     {
         $operators = Operator::model()->findAll();

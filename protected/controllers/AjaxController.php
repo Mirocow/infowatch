@@ -22,10 +22,15 @@ class AjaxController extends Controller
     }
     public function actionCreateGroup()
     {
-        $group = new Group();
-        $group->save();
+        if(isset($_POST['parent']) && isset($_POST['name']))
+        {
+            $group = new Group();
+            $group->name = $_POST['name'];
+            $group->parent_id = $_POST['parent'];
+            $group->save();
 
-        echo json_encode(['id' => $group->getPrimaryKey()]);
+            echo json_encode($group->attributes);
+        }
     }
 
     public function actionRenamePerson()
@@ -86,6 +91,18 @@ class AjaxController extends Controller
             {
                 $person->group_id = $_POST['newParent'];
                 $person->save();
+            }
+        }
+    }
+    public function actionMoveGroup()
+    {
+        if(isset($_POST['id']) && isset($_POST['parent']))
+        {
+            $group = Group::model()->findByPk($_POST['id']);
+            if($group)
+            {
+                $group->parent_id = $_POST['parent'];
+                $group->save();
             }
         }
     }

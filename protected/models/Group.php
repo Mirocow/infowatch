@@ -6,8 +6,11 @@
  * The followings are the available columns in table 'group':
  * @property integer $id
  * @property string $name
+ * @property integer $parent_id
  *
  * The followings are the available model relations:
+ * @property Group $parent
+ * @property Group[] $groups
  * @property Person[] $people
  */
 class Group extends CActiveRecord
@@ -28,10 +31,11 @@ class Group extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
+			array('parent_id', 'numerical', 'integerOnly'=>true),
 			array('name', 'length', 'max'=>45),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, name', 'safe', 'on'=>'search'),
+			array('id, name, parent_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -43,6 +47,8 @@ class Group extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'parent' => array(self::BELONGS_TO, 'Group', 'parent_id'),
+			'groups' => array(self::HAS_MANY, 'Group', 'parent_id'),
 			'people' => array(self::HAS_MANY, 'Person', 'group_id'),
 		);
 	}
@@ -54,7 +60,8 @@ class Group extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'name' => 'Название',
+			'name' => 'Name',
+			'parent_id' => 'Parent',
 		);
 	}
 
@@ -78,6 +85,7 @@ class Group extends CActiveRecord
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('name',$this->name,true);
+		$criteria->compare('parent_id',$this->parent_id);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

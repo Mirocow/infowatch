@@ -8,6 +8,7 @@
 
 /* @var $persons Person[] */
 /* @var $allPersons Person[] */
+
 ?>
 
 <div class="content col-md-11">
@@ -18,17 +19,18 @@
                     <div id="jstree">
                         <ul>
                             <li id="root" data-jstree='{"type":"root"}'>Группы
-                                <ul>
-                                    <?php foreach($persons as $group): ?>
-                                        <li data-jstree='{"type":"group"}' group_id="<?=$group['group']->id;?>"><?=$group['group']->name;?>
+                                <ul><?=$tree?>
+                                    <!--
+                                    <?php /*foreach($persons as $group): */?>
+                                        <li data-jstree='{"type":"group"}' group_id="<?/*=$group['group']->id;*/?>"><?/*=$group['group']->name;*/?>
                                             <ul>
-                                                <?php foreach($group['persons'] as $person): ?>
-                                                    <li data-jstree='{"type":"person"}' person_id="<?=$person->id;?>"><?=$person->name;?></li>
-                                                <?php endforeach;?>
+                                                <?php /*foreach($group['persons'] as $person): */?>
+                                                    <li data-jstree='{"type":"person"}' person_id="<?/*=$person->id;*/?>"><?/*=$person->name;*/?></li>
+                                                <?php /*endforeach;*/?>
                                             </ul>
                                         </li>
-                                    <?php endforeach;?>
-                                    </li>
+                                    <?php /*endforeach;*/?>
+                                    </li>-->
                                 </ul>
                             </li>
                         </ul>
@@ -259,18 +261,37 @@
 
         $('#jstree')
         .on('move_node.jstree', function(e, target){
-            var newParent = $('#' + target.parent).attr('group_id');
-            var personId = target.node.li_attr.person_id;
 
-            $.post(
-                Yii.app.createUrl('/ajax/movePerson'),
-                {
-                    id: personId,
-                    newParent: newParent
-                }
-            ).done(function(response){
+            if(target.node.type == 'person')
+            {
+                var newParent = $('#' + target.parent).attr('group_id');
+                var personId = target.node.li_attr.person_id;
 
-                });
+                $.post(
+                    Yii.app.createUrl('/ajax/movePerson'),
+                    {
+                        id: personId,
+                        newParent: newParent
+                    }
+                ).done(function(response){
+
+                    });
+            }
+            if(target.node.type == 'group')
+            {
+                var parentId = $('#' + target.parent).attr('group_id');
+                var id = $('#' + target.node.id).attr('group_id');
+
+                $.post(
+                    Yii.app.createUrl('/ajax/moveGroup'),
+                    {
+                        id: id,
+                        parent: parentId
+                    }
+                ).done(function(response){
+
+                    });
+            }
         })
         .on('create_node.jstree', function(e, target){
             //alert(target);
@@ -316,7 +337,7 @@
                         // in case of 'rename_node' node_position is filled with the new node name
 
                         if (operation === "move_node") {
-                            return (node_parent.type === "group" && node.type === "person"); //only allow dropping inside nodes of type 'Parent'
+                            return ((node.type === "person" && node_parent.type === "group") || (node.type === "group" && node_parent.type === "group")); //only allow dropping inside nodes of type 'Parent'
                         }
                         return true;  //allow all other operations
                     }
@@ -337,17 +358,33 @@
                                         "seperator_after": false,
                                         "label": "Группу",
                                         action: function (obj) {
-                                            if($node.id == 'root')
+                                            if($node.id == 'root' || $node.type == 'group')
                                             {
-                                                $node = tree.create_node($node, {
-                                                    "li_attr": {
-                                                        "type": "group",
-                                                        "parent": $node.li_attr.group_id
+                                                var parent = null;
+                                                if($node.type == 'group')
+                                                    parent = $node.li_attr.group_id;
+                                                $.post(
+                                                    Yii.app.createUrl('/ajax/createGroup'),
+                                                    {
+                                                        parent: parent,
+                                                        name: 'Нвоая группа'
                                                     }
-                                                });
-                                                tree.set_type($node, "group");
-                                                tree.set_text($node, "Новая группа");
-                                                tree.edit($node);
+                                                ).done(function(response)
+                                                    {
+                                                        response = JSON.parse(response);
+
+
+                                                        $node = tree.create_node($node, {
+                                                            "li_attr": {
+                                                                "type": "group",
+                                                                "parent": parent,
+                                                                "group_id": response.id
+                                                            }
+                                                        });
+                                                        tree.set_type($node, "group");
+                                                        tree.set_text($node, "Новая группа");
+                                                        tree.edit($node);
+                                                    });
                                             }
                                         }
                                     },
@@ -423,7 +460,7 @@
                     "group" : {
                         "icon": "/img/folder_tm.png",
                         max_depth: 5,
-                        'valid_children ': ['person']
+                        'valid_children ': ['person', 'group']
                     },
                     "person" : {
                         "max_children" : 0,
