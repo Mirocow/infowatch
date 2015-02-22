@@ -137,4 +137,31 @@ class AjaxController extends Controller
             echo json_encode($operator->attributes);
         }
     }
+
+    public function actionDrawUser()
+    {
+        if(isset($_POST['id']))
+        {
+            $user = Person::model()->findByPk($_POST['id']);
+
+            if($user)
+            {
+                $response = ['content' => $this->renderPartial('user', compact('user'), true), 'user' => $user->attributes];
+                echo json_encode($response);
+            }
+        }
+    }
+    public function actionDrawGroup()
+    {
+        if(isset($_POST['id']))
+        {
+            $group = Group::model()->findByPk($_POST['id']);
+
+            if($group)
+            {
+                $response = ['content' => $this->renderPartial('group', compact('group'), true), 'group' => $group->attributes];
+                echo json_encode($response);
+            }
+        }
+    }
 }

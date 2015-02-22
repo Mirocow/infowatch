@@ -39,35 +39,50 @@
             <div class="tab-pane fade active in" id="net">
                 <h2 class="settings--header">Сетевые настройки</h2>
                 <p class="settings--header-subtitle">Настройка параметров сети устройства. Настройка соединения с InfoWatch Traffic Monitor.</p>
-                <table width="50%" align="center" cellpadding="4" cellspacing="0" class="table table-stripped">
-                    <tbody><tr>
+                <table width="50%" align="center" cellpadding="4" cellspacing="0" class="table table-stripped" id="network">
+                    <tbody>
+                    <tr>
+                        <th width="50%" style="border-top: 0 none;">DHCP</th>
+                        <td style="border-top: 0 none;">
+                            <span style="color:#888;"><i class="fa fa-toggle-off text-success" style="cursor: pointer; font-size: 16pt;" id="dhcp"></i></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="50%" style="border-top: 0 none;">Hostname</th>
+                        <td style="border-top: 0 none;">
+                            <input type="text" maxlength="15" class="input" size="15" id="lan_ipaddr" name="lan_ipaddr" value="example.com">
+                            &nbsp;<span style="color:#888;">example.com</span>
+                        </td>
+                    </tr>
+                    <tr>
                         <th width="50%" style="border-top: 0 none;">IP адрес</th>
                         <td style="border-top: 0 none;">
-                            <input type="text" maxlength="15" class="input" size="15" id="lan_ipaddr" name="lan_ipaddr" value="192.168.1.113">
+                            <input type="text" maxlength="15" class="input block" size="15" id="lan_ipaddr" name="lan_ipaddr" value="192.168.1.113">
                             &nbsp;<span style="color:#888;">192.168.1.1</span>
                         </td>
                     </tr>
                     <tr>
                         <th>Маска подсети</th>
                         <td>
-                            <input type="text" maxlength="15" class="input" size="15" name="lan_netmask" value="255.255.255.0">
-                            &nbsp;<span style="color:#888;">255.255.255.0</span>
+                            <input type="text" maxlength="15" class="input block" size="15" name="lan_netmask" value="255.255.255.0">
+                            &nbsp;<span class="block" style="color:#888;">255.255.255.0</span>
                         </td>
                     </tr>
                     <tr>
                         <th>Шлюз</th>
                         <td>
-                            <input type="text" maxlength="15" class="input" size="15" name="lan_gateway" value="192.168.1.1">
-                            &nbsp;<span style="color:#888;">192.168.1.1</span>
+                            <input type="text" maxlength="15" class="input block" size="15" name="lan_gateway" value="192.168.1.1">
+                            &nbsp;<span class="block" style="color:#888;">192.168.1.1</span>
                         </td>
                     </tr>
                     <tr>
                         <th>DNS</th>
                         <td>
-                            <input type="text" maxlength="15" class="input" size="15" name="lan_DNS" value="192.168.1.1">
+                            <input type="text" maxlength="15" class="input block" size="15" name="lan_DNS" value="192.168.1.1">
                             &nbsp;<span style="color:#888;">192.168.1.1</span>
                         </td>
                     </tr>
+                    <!--
                     <tr>
                         <th>IP адрес Traffic Monitor</th>
                         <td>
@@ -82,6 +97,7 @@
                             &nbsp;<span style="color:#888;">3000</span>
                         </td>
                     </tr>
+                    -->
                     </tbody>
                 </table>
             </div>
@@ -287,5 +303,18 @@
                     $('#remove-operator').attr('disabled', 'disabled');
                 });
         });
+
+        $('#dhcp').click(function(){
+            if($(this).hasClass('fa-toggle-off'))
+            {
+                $(this).removeClass('fa-toggle-off').addClass('fa-toggle-on');
+                $('#network input.block').attr('disabled', 'disabled');
+            }
+            else
+            {
+                $(this).removeClass('fa-toggle-on').addClass('fa-toggle-off');
+                $('#network input.block').removeAttr('disabled');
+            }
+        })
     });
 </script>

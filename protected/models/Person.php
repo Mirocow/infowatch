@@ -119,4 +119,12 @@ class Person extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+
+    public function getGroup()
+    {
+        if($this->group)
+            return $this->group->name;
+        else
+            return '-';
+    }
 }

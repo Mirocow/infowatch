@@ -10,7 +10,11 @@
 /* @var $allPersons Person[] */
 
 ?>
-
+<script>
+    var type = 'group';
+    var personId = null;
+    var groupId = null;
+</script>
 <div class="content col-md-11">
     <div class="col-md-4">
         <div class="row">
@@ -40,13 +44,18 @@
         </div>
 
     </div>
-
     <div class="col-md-8">
 
-        <div class="col-md-12" style="margin-bottom: 20px;">
+        <div class="col-md-12" id="buttons" style="margin-bottom: 20px;">
             <button type="button" class="btn btn-default" id="edit-person" disabled="disabled"><i class="glyphicon glyphicon-pencil"></i> Изменить</button>
             <button type="button" class="btn btn-default" id="remove-person" disabled="disabled"><i class="glyphicon glyphicon-remove"></i> Удалить</button>
         </div>
+        <div class="col-md-12" id="details">
+
+        </div>
+    </div>
+    <div class="col-md-8" style="display: none;">
+
         <table class="table persons-table">
             <thead>
             <tr>
@@ -173,9 +182,6 @@
                 });
         });
         $('#edit-person').click(function(){
-            var currentPerson = $('.persons-table tbody tr.active');
-            var personId = $('.persons-table tbody tr.active').attr('person-id');
-
             $.post(
                 Yii.app.createUrl('/ajax/getPerson'),
                 {
@@ -209,16 +215,8 @@
             });
             request.done(function(response) {
                 response = JSON.parse(response);
-                var destination = $('.persons-table tbody tr.active');
-
-                $(destination).find('td:eq(0)').html(response.name);
-                $(destination).find('td:eq(1)').html(response.job);
-                $(destination).find('td:eq(2)').html(response.department);
-                $(destination).find('td:eq(3)').html(response.boss);
-                $(destination).find('td:eq(4)').html(response.phone);
-
+                drawUser(response.id);
                 $('#jstree li[person_id=' + response.id + '] a').html('<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image: url(<?=Yii::app()->request->baseUrl?>/img/user.png); background-size: auto; background-position: 50% 50%;"></i>' + response.name);
-
                 $('#editPersonModal').modal('hide');
             });
         });
@@ -226,6 +224,42 @@
 </script>
 
 <script>
+    function drawUser(id)
+    {
+        $.post(
+            Yii.app.createUrl('/ajax/drawUser'),
+            {
+                id: id
+            }
+        ).done(function(response){
+                response = JSON.parse(response);
+                $('#details').html(response.content);
+
+                type = 'user';
+                $('#edit-person').removeAttr('disabled');
+                $('#remove-person').removeAttr('disabled');
+                personId = response.user.id;
+                $('#buttons').show();
+            });
+    }
+    function drawGroup(id)
+    {
+        $.post(
+            Yii.app.createUrl('/ajax/drawGroup'),
+            {
+                id: id
+            }
+        ).done(function(response){
+            response = JSON.parse(response);
+
+            $('#details').html(response.content);
+
+            type = 'group';
+            $('#edit-person').removeAttr('disabled');
+            $('#remove-person').removeAttr('disabled');
+            $('#buttons').hide();
+        });
+    }
     function demo_create() {
         var ref = $('#jstree').jstree(true),
             sel = ref.get_selected();
@@ -260,6 +294,16 @@
         });
 
         $('#jstree')
+        .on('select_node.jstree', function(e, target) {
+            if(target.node.type == 'person')
+            {
+                drawUser(target.node.li_attr.person_id);
+            }
+            if(target.node.type == 'group')
+            {
+                drawGroup(target.node.li_attr.group_id);
+            }
+        })
         .on('move_node.jstree', function(e, target){
 
             if(target.node.type == 'person')
