@@ -8,6 +8,7 @@
 
 /* @var $persons Person[] */
 /* @var $allPersons Person[] */
+/* @var $form CActiveForm */
 
 ?>
 <script>
@@ -16,6 +17,11 @@
     var groupId = null;
 </script>
 <div class="content col-md-11">
+    <div class="row">
+        <nav class="breadcrumbs">
+            Контроль
+        </nav>
+    </div>
     <div class="col-md-4">
         <div class="row">
             <div class="row">
@@ -46,9 +52,13 @@
     </div>
     <div class="col-md-8">
 
-        <div class="col-md-12" id="buttons" style="margin-bottom: 20px;">
+        <div class="col-md-12" id="person-buttons" style="margin-bottom: 20px; display: none;">
             <button type="button" class="btn btn-default" id="edit-person" disabled="disabled"><i class="glyphicon glyphicon-pencil"></i> Изменить</button>
             <button type="button" class="btn btn-default" id="remove-person" disabled="disabled"><i class="glyphicon glyphicon-remove"></i> Удалить</button>
+        </div>
+        <div class="col-md-12" id="group-buttons" style="margin-bottom: 20px; display: none;">
+            <button type="button" class="btn btn-default" id="edit-group" disabled="disabled"><i class="glyphicon glyphicon-pencil"></i> Изменить</button>
+            <button type="button" class="btn btn-default" id="remove-group" disabled="disabled"><i class="glyphicon glyphicon-remove"></i> Удалить</button>
         </div>
         <div class="col-md-12" id="details">
 
@@ -153,19 +163,76 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="editGroupModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="editGroupModalLabel"></h4>
+                </div>
+                <?php
+                $group = new Group();
+                $form=$this->beginWidget('CActiveForm', array(
+                    'id'=>'edit-group-form',
+                    'enableClientValidation'=>true,
+                    'clientOptions'=>array(
+                        'validateOnSubmit'=>true,
+                    ),
+                    'htmlOptions' => ['class' => 'form-horizontal']
+                )); ?>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <?php echo $form->labelEx($group,'name', ['class' => 'col-md-3 control-label']); ?>
+                            <div class="col-md-9">
+                                <?php echo $form->textField($group,'name', ['class' => 'form-control', 'id' => 'group_name']); ?>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <?php echo $form->labelEx($group,'voice', ['class' => 'col-md-3 control-label']); ?>
+                            <div class="col-md-9">
+                                <?php echo $form->checkBox($group,'voice', ['class' => 'form-control', 'id' => 'group_voice']); ?>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <?php echo $form->labelEx($group,'sms', ['class' => 'col-md-3 control-label']); ?>
+                            <div class="col-md-9">
+                                <?php echo $form->checkBox($group,'sms', ['class' => 'form-control', 'id' => 'group_sms']); ?>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <?php echo $form->labelEx($group,'greet', ['class' => 'col-md-3 control-label']); ?>
+                            <div class="col-md-9">
+                                <?php echo $form->checkBox($group,'greet', ['class' => 'form-control', 'id' => 'group_greet']); ?>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <?php echo $form->labelEx($group,'greet_message', ['class' => 'col-md-3 control-label']); ?>
+                            <div class="col-md-9">
+                                <?php echo $form->textArea($group,'greet_message', ['class' => 'form-control', 'id' => 'group_greet_message']); ?>
+                            </div>
+                        </div>
+                        <?php echo $form->textArea($group,'id', ['class' => 'form-control', 'style' => 'display: none;', 'id' => 'group_id']); ?>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                        <button type="button" class="btn btn-primary" id="save-group">Сохранить</button>
+                    </div>
+                <?php $this->endWidget(); ?>
+            </div>
+        </div>
+    </div>
 </div>
 <script>
     $(document).on('click', '.person-row', function(e){
-        $(this).parent().find('.person-row').removeClass('active');
-        $(this).addClass('active');
-
-        $('#remove-person').removeAttr('disabled');
-        $('#edit-person').removeAttr('disabled');
-
+        var id = $(this).attr('person-id');
+        drawUser(id);
+        $('#jstree')
+            .jstree('deselect_all').jstree('select_node', 'p' + id);
     });
     $(document).ready(function(){
         $('#remove-person').click(function(){
-            var personId = $('.persons-table tbody tr.active').attr('person-id');
+            var id = $('.persons-table tbody tr.active').attr('person-id');
 
             var url = Yii.app.createUrl('/ajax/deletePerson');
 
@@ -173,12 +240,12 @@
             $.post(
                 url,
                 {
-                    id:  personId
+                    id:  id
                 }
             ).done(function(response){
-                    $('li[person_id=' + personId + ']').remove();
+                    $('li[person_id=' + id + ']').remove();
                     $('.persons-table tbody tr.active').remove();
-                    $('#remove-person').attr('disabled', 'disabled');
+                    //$('#remove-person').attr('disabled', 'disabled');
                 });
         });
         $('#edit-person').click(function(){
@@ -202,6 +269,38 @@
                     $('#editPersonModal').modal('show');
                 });
         });
+        $('#edit-group').click(function(){
+            $.post(
+                Yii.app.createUrl('/ajax/getGroup'),
+                {
+                    id: groupId
+                }
+            ).done(function (response) {
+                    response = JSON.parse(response);
+
+                    $('#group_name').val(response.name);
+                    $('#group_greet_message').val(response.greet_message);
+
+                    if(response.voice == '1')
+                        $('#group_voice').attr('checked', 'checked');
+                    else
+                        $('#group_voice').removeAttr('checked');
+
+                    if(response.sms == '1')
+                        $('#group_sms').attr('checked', 'checked');
+                    else
+                        $('#group_sms').removeAttr('checked');
+
+                    if(response.greet == '1')
+                        $('#group_greet').attr('checked', 'checked');
+                    else
+                        $('#group_greet').removeAttr('checked');
+
+                    $('#group_id').val(groupId);
+
+                    $('#editGroupModal').modal('show');
+                });
+        });
         $('#save-person').click(function(){
             var form = new FormData($('#edit-person-form')[0]);
 
@@ -220,12 +319,31 @@
                 $('#editPersonModal').modal('hide');
             });
         });
+        $('#save-group').click(function(){
+            var form = new FormData($('#edit-group-form')[0]);
+
+            var request = $.ajax({
+                url: Yii.app.createUrl('/ajax/saveGroup'),
+                type: "POST",
+                processData: false,
+                cache: false,
+                contentType: false,
+                data: form
+            });
+            request.done(function(response) {
+                response = JSON.parse(response);
+                drawGroup(response.id);
+                $('#jstree li[group_id=' + response.id + '] a').html('<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image: url(<?=Yii::app()->request->baseUrl?>/img/folder_tm.png); background-size: auto; background-position: 50% 50%;"></i>' + response.name);
+                $('#editGroupModal').modal('hide');
+            });
+        });
     });
 </script>
 
 <script>
     function drawUser(id)
     {
+        personId = id;
         $.post(
             Yii.app.createUrl('/ajax/drawUser'),
             {
@@ -239,11 +357,13 @@
                 $('#edit-person').removeAttr('disabled');
                 $('#remove-person').removeAttr('disabled');
                 personId = response.user.id;
-                $('#buttons').show();
+                $('#group-buttons').hide();
+                $('#person-buttons').show();
             });
     }
     function drawGroup(id)
     {
+        groupId = id;
         $.post(
             Yii.app.createUrl('/ajax/drawGroup'),
             {
@@ -255,9 +375,11 @@
             $('#details').html(response.content);
 
             type = 'group';
-            $('#edit-person').removeAttr('disabled');
-            $('#remove-person').removeAttr('disabled');
-            $('#buttons').hide();
+            $('#edit-group').removeAttr('disabled');
+            $('#remove-group').removeAttr('disabled');
+
+            $('#group-buttons').show();
+            $('#person-buttons').hide();
         });
     }
     function demo_create() {
@@ -309,12 +431,12 @@
             if(target.node.type == 'person')
             {
                 var newParent = $('#' + target.parent).attr('group_id');
-                var personId = target.node.li_attr.person_id;
+                var id = target.node.li_attr.person_id;
 
                 $.post(
                     Yii.app.createUrl('/ajax/movePerson'),
                     {
-                        id: personId,
+                        id: id,
                         newParent: newParent
                     }
                 ).done(function(response){
@@ -341,15 +463,24 @@
             //alert(target);
         })
         .on('rename_node.jstree', function(e, target) {
+                var url = null;
+                var id = null;
                 if(target.node.type == 'person')
-                    var url = Yii.app.createUrl('/ajax/renamePerson');
+                {
+                    url = Yii.app.createUrl('/ajax/renamePerson');
+                    id = $('#'+target.node.id).attr('person_id');
+
+                }
                 else
-                    var url = Yii.app.createUrl('/ajax/renameGroup');
+                {
+                    url = Yii.app.createUrl('/ajax/renameGroup');
+                    id = $('#'+target.node.id).attr('group_id');
+                }
 
                 $.post(
                     url,
                     {
-                        id: $('#'+target.node.id).attr('person_id'),
+                        id: id,
                         newName: target.text
                     }
                 ).done(function(response){
@@ -358,15 +489,22 @@
         })
         .on('delete_node.jstree', function(e, target) {
                 if(target.node.type == 'person')
-                    var url = Yii.app.createUrl('/ajax/deletePerson');
+                {
+                    url = Yii.app.createUrl('/ajax/deletePerson');
+                    id = $('#'+target.node.id).attr('person_id');
+
+                }
                 else
-                    var url = Yii.app.createUrl('/ajax/deleteGroup');
+                {
+                    url = Yii.app.createUrl('/ajax/deleteGroup');
+                    id = $('#'+target.node.id).attr('group_id');
+                }
 
 
                 $.post(
                     url,
                     {
-                        id: $('#'+target.node.id).attr('person_id')
+                        id: id
                     }
                 ).done(function(response){
                         return true;

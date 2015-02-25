@@ -1,30 +1,21 @@
 <?php
 
 /**
- * This is the model class for table "group".
+ * This is the model class for table "log".
  *
- * The followings are the available columns in table 'group':
+ * The followings are the available columns in table 'log':
  * @property integer $id
- * @property string $name
- * @property integer $voice
- * @property integer $sms
- * @property integer $greet
- * @property string $greet_message
- * @property integer $parent_id
- *
- * The followings are the available model relations:
- * @property Group $parent
- * @property Group[] $groups
- * @property Person[] $people
+ * @property string $happened
+ * @property string $details
  */
-class Group extends CActiveRecord
+class Log extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'group';
+		return 'log';
 	}
 
 	/**
@@ -35,12 +26,10 @@ class Group extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('voice, sms, greet, parent_id', 'numerical', 'integerOnly'=>true),
-			array('name', 'length', 'max'=>45),
-			array('greet_message', 'safe'),
+			array('happened, details', 'required'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, name, voice, sms, greet, greet_message, parent_id', 'safe', 'on'=>'search'),
+			array('id, happened, details', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -52,9 +41,6 @@ class Group extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'parent' => array(self::BELONGS_TO, 'Group', 'parent_id'),
-			'groups' => array(self::HAS_MANY, 'Group', 'parent_id'),
-			'people' => array(self::HAS_MANY, 'Person', 'group_id'),
 		);
 	}
 
@@ -65,12 +51,8 @@ class Group extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'name' => 'Name',
-			'voice' => 'Voice',
-			'sms' => 'Sms',
-			'greet' => 'Greet',
-			'greet_message' => 'Greet Message',
-			'parent_id' => 'Parent',
+			'happened' => 'Happened',
+			'details' => 'Details',
 		);
 	}
 
@@ -93,12 +75,8 @@ class Group extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('name',$this->name,true);
-		$criteria->compare('voice',$this->voice);
-		$criteria->compare('sms',$this->sms);
-		$criteria->compare('greet',$this->greet);
-		$criteria->compare('greet_message',$this->greet_message,true);
-		$criteria->compare('parent_id',$this->parent_id);
+		$criteria->compare('happened',$this->happened,true);
+		$criteria->compare('details',$this->details,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -109,7 +87,7 @@ class Group extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return Group the static model class
+	 * @return Log the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

@@ -60,6 +60,7 @@
                 <div class="link-desc">Управление</div>
             </div>
         </a>
+        <div class="endblack"></div>
     </div>
     <?php echo $content; ?>
 </body>

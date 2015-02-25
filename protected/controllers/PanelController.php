@@ -50,7 +50,7 @@ class PanelController extends Controller {
                 $return .= '<ul>';
                 foreach(Person::model()->findAllByAttributes(['group_id' => $group->id]) as $person)
                 {
-                    $return .= '<li data-jstree=\'{"type":"person"}\' person_id="'.$person->id.'">'.$person->name.'</li>';
+                    $return .= '<li data-jstree=\'{"type":"person"}\' id="p'.$person->id.'" person_id="'.$person->id.'">'.$person->name.'</li>';
                 }
                 $return .= $this->displayTree(Group::model()->findAllByAttributes(['parent_id' => $group->id]));
                 $return .= '</ul>';
@@ -62,7 +62,18 @@ class PanelController extends Controller {
     public function actionSettings()
     {
         $operators = Operator::model()->findAll();
+
+        $voip = Settings::getByName('voip');
+        $gsm = Settings::getByName('gsm');
+        $system = Settings::getByName('system');
+        $network = Settings::getByName('network');
+
         $this->active = 'settings';
-        $this->render('settings', compact('operators'));
+        $this->render('settings', compact('operators', 'voip', 'gsm', 'system', 'network'));
+    }
+
+    public function actionJs()
+    {
+        echo json_encode(['hostname' => 'example.com', 'ip' => '192.168.1.113', 'mask' => '255.255.255.0', 'gateway' => '192.168.1.1', 'dns' => '192.168.1.1']);
     }
 }

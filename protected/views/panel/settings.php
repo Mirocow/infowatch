@@ -7,9 +7,13 @@
  */
 
 /* @var $operators Operator[] */
+/* @var $form CActiveForm */
 ?>
 
 <div class="settings-content col-md-11">
+        <nav class="breadcrumbs">
+            Настройки
+        </nav>
     <div class="col-md-2 settings-tabs">
         <ul>
             <li class="link-container active">
@@ -20,6 +24,11 @@
             <li class="link-container">
                 <a href="#mobile" data-toggle="tab">
                     <i class="fa fa-mobile-phone"></i> Операторы
+                </a>
+            </li>
+            <li class="link-container">
+                <a href="#voip" data-toggle="tab">
+                    <i class="fa fa-volume-up"></i> Настройки VoIP
                 </a>
             </li>
             <li class="link-container">
@@ -44,41 +53,41 @@
                     <tr>
                         <th width="50%" style="border-top: 0 none;">DHCP</th>
                         <td style="border-top: 0 none;">
-                            <span style="color:#888;"><i class="fa fa-toggle-off text-success" style="cursor: pointer; font-size: 16pt;" id="dhcp"></i></span>
+                            <span style="color:#888;"><i class="fa <?=$network['dhcp'] == '1' ? 'fa-toggle-on' : 'fa-toggle-off'?> text-success" style="cursor: pointer; font-size: 16pt;" id="dhcp"></i></span>
                         </td>
                     </tr>
                     <tr>
                         <th width="50%" style="border-top: 0 none;">Hostname</th>
                         <td style="border-top: 0 none;">
-                            <input type="text" maxlength="15" class="input" size="15" id="lan_ipaddr" name="lan_ipaddr" value="example.com">
+                            <input type="text" maxlength="15" class="input" size="15" id="network_hostname" name="lan_ipaddr" value="<?=$network['hostname']?>">
                             &nbsp;<span style="color:#888;">example.com</span>
                         </td>
                     </tr>
                     <tr>
                         <th width="50%" style="border-top: 0 none;">IP адрес</th>
                         <td style="border-top: 0 none;">
-                            <input type="text" maxlength="15" class="input block" size="15" id="lan_ipaddr" name="lan_ipaddr" value="192.168.1.113">
+                            <input type="text" maxlength="15" class="input block" size="15" id="network_ip" name="lan_ipaddr" value="<?=$network['ip']?>" <?=$network['dhcp'] == '1' ? 'disabled="disabled"' : ''?>>
                             &nbsp;<span style="color:#888;">192.168.1.1</span>
                         </td>
                     </tr>
                     <tr>
                         <th>Маска подсети</th>
                         <td>
-                            <input type="text" maxlength="15" class="input block" size="15" name="lan_netmask" value="255.255.255.0">
+                            <input type="text" maxlength="15" class="input block" size="15" id="network_mask" value="<?=$network['mask']?>" <?=$network['dhcp'] == '1' ? 'disabled="disabled"' : ''?>>
                             &nbsp;<span class="block" style="color:#888;">255.255.255.0</span>
                         </td>
                     </tr>
                     <tr>
                         <th>Шлюз</th>
                         <td>
-                            <input type="text" maxlength="15" class="input block" size="15" name="lan_gateway" value="192.168.1.1">
+                            <input type="text" maxlength="15" class="input block" size="15" id="network_gateway" value="<?=$network['gateway']?>" <?=$network['dhcp'] == '1' ? 'disabled="disabled"' : ''?>>
                             &nbsp;<span class="block" style="color:#888;">192.168.1.1</span>
                         </td>
                     </tr>
                     <tr>
                         <th>DNS</th>
                         <td>
-                            <input type="text" maxlength="15" class="input block" size="15" name="lan_DNS" value="192.168.1.1">
+                            <input type="text" maxlength="15" class="input block" size="15" id="network_dns" value="<?=$network['dns']?>" <?=$network['dhcp'] == '1' ? 'disabled="disabled"' : ''?>>
                             &nbsp;<span style="color:#888;">192.168.1.1</span>
                         </td>
                     </tr>
@@ -100,6 +109,7 @@
                     -->
                     </tbody>
                 </table>
+                <center><input class="btn btn-primary" style="width: 219px" type="button" value="Сохранить" onclick="saveNetwork();"></center>
             </div>
             <div class="tab-pane fade" id="mobile">
                 <h2 class="settings--header">Операторы</h2>
@@ -107,6 +117,9 @@
                 <div class="btn-group ">
                     <button type="button" class="btn btn-default" id="addOperator">
                         Добавить
+                    </button>
+                    <button type="button" class="btn btn-default" id="editOperator" disabled="disabled">
+                        Изменить
                     </button>
                     <button type="button" class="btn btn-danger" id="remove-operator" disabled="disabled">Удалить</button>
                 </div>
@@ -119,6 +132,7 @@
                         <th>MCC</th>
                         <th>MNC</th>
                         <th>ARFCN</th>
+                        <th>Статус</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -139,6 +153,9 @@
                                 <td>
                                     <?=$operator->arfcn;?>
                                 </td>
+                                <td>
+                                    <?=$operator->getStatus();?>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -154,18 +171,46 @@
                                 <tbody><tr>
                                     <th width="50%" style="border-top: 0 none;">C0</th>
                                     <td style="border-top: 0 none;">
-                                        <input type="text" maxlength="15" class="input" size="15" id="lan_ipaddr" name="lan_ipaddr" value="2">
+                                        <input type="text" maxlength="15" class="input" size="15" id="gsm_c0" name="lan_ipaddr" value="<?=$gsm['c0'];?>">
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>Мощность</th>
                                     <td>
-                                        <input type="text" maxlength="15" class="input" size="15" name="lan_netmask" value="100">
+                                        <input type="text" maxlength="15" class="input" size="15" id="gsm_power" name="gsm_power" value="<?=$gsm['power'];?>">
                                     </td>
                                 </tr>
                                 </tbody></table>
 
-                            <center><input class="btn btn-primary" style="width: 219px" type="submit" value="Сохранить" onclick=""></center>
+                            <center><input class="btn btn-primary" style="width: 219px" type="button" value="Сохранить" onclick="saveGsm();"></center>
+
+                        </div>
+                        <div class="settings--wrap" id="server_settings"></div>
+                    </div>
+                </section>
+            </div>
+            <div class="tab-pane fade" id="voip"><section>
+                    <div class="settings--wrapper">
+                        <h2 class="settings--header">Настройки VoIP</h2>
+                        <p class="settings--header-subtitle">Настройка параметров VoIP.</p>
+                        <div class="settings--aside">
+
+                            <table width="50%" align="center" cellpadding="4" cellspacing="0" class="table table-stripped">
+                                <tbody><tr>
+                                    <th width="50%" style="border-top: 0 none;">Логин</th>
+                                    <td style="border-top: 0 none;">
+                                        <input type="text" maxlength="15" class="input" size="15" id="voip_login" name="lan_ipaddr" value="<?=$voip['login'];?>">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Пароль</th>
+                                    <td>
+                                        <input type="text" maxlength="15" class="input" size="15" id="voip_password" name="gsm_power" value="<?=$voip['password'];?>">
+                                    </td>
+                                </tr>
+                                </tbody></table>
+
+                            <center><input class="btn btn-primary" style="width: 219px" type="button" value="Сохранить" onclick="saveVoip();"></center>
 
                         </div>
                         <div class="settings--wrap" id="server_settings"></div>
@@ -177,23 +222,45 @@
                     <h2 class="settings--header">Статус</h2>
                     <p class="settings--header-subtitle">Отображение статуса и лога устройства.</p>
                     <div class="settings--aside">
-
+                        <center>
                         <table border="0px" style="background-color: transparent; margin-bottom: 35px;">
                             <tbody><tr>
                                 <td width="200px">
                                     Статус системы:
                                 </td>
                                 <td>
-                                    <select id="validateSelect" name="validateSelect" class="form-control" data-required="true">
-                                        <option value="1" id="1">Онлайн</option>
-                                        <option value="2" id="2">Оффлайн</option>
+                                    <select id="system_status" name="validateSelect" class="form-control" data-required="true">
+                                        <option value="1" <?=$system['status'] == '1' ? 'selected="selected"' : '' ?>>Онлайн</option>
+                                        <option value="0" <?=$system['status'] == '0' ? 'selected="selected"' : '' ?>>Оффлайн</option>
                                     </select>								</td>
                             </tr>
                             </tbody></table>
 
 
+                        <input class="btn btn-primary" style="width: 219px" type="button" value="Сохранить" onclick="saveSystem();"></center>
                     </div>
-                    <div class="settings--wrap" id="server_settings"></div>
+                    <center>
+                        <table cellpadding="0" cellspacing="0" border="0" class="table table-bordered table-striped" id="operators" width="100%" style="margin-top: 10px;">
+                            <thead>
+                            <tr>
+                                <th>Время</th>
+                                <th>Событие</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php foreach(Log::model()->findAll() as $log): ?>
+                                <tr>
+                                    <td class="col-md-2">
+                                        <?=$log->happened;?>
+                                    </td>
+                                    <td>
+                                        <?=$log->details;?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </center>
                 </div>
             </div>
         </div>
@@ -244,7 +311,72 @@
                         <?php echo $form->textField($operator,'arfcn', ['class' => 'form-control', 'id' => 'person_boss']); ?>
                     </div>
                 </div>
+                <div class="form-group">
+                    <?php echo $form->labelEx($operator,'status', ['class' => 'col-md-3 control-label']); ?>
+                    <div class="col-md-9">
+                        <?php echo $form->dropDownList($operator,'status', [1 => 'Online', 0 => 'Offline'], ['class' => 'form-control', 'id' => 'person_boss']); ?>
+                    </div>
+                </div>
             </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary" id="add-operator">Сохранить</button>
+            </div>
+            <?php $this->endWidget(); ?>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="editOperatorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="operatorModalLabel">Изменение оператора</h4>
+            </div><?php
+            $operator = new Operator();
+            $form=$this->beginWidget('CActiveForm', array(
+                'id'=>'operator-save-form',
+                'enableClientValidation'=>true,
+                'clientOptions'=>array(
+                    'validateOnSubmit'=>true,
+                ),
+                'htmlOptions' => ['class' => 'form-horizontal']
+            )); ?>
+            <div class="modal-body">
+                <div class="form-group">
+                    <?php echo $form->labelEx($operator,'name', ['class' => 'col-md-3 control-label']); ?>
+                    <div class="col-md-9">
+                        <?php echo $form->textField($operator,'name', ['class' => 'form-control', 'id' => 'operator_name']); ?>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <?php echo $form->labelEx($operator,'mcc', ['class' => 'col-md-3 control-label']); ?>
+                    <div class="col-md-9">
+                        <?php echo $form->textField($operator,'mcc', ['class' => 'form-control', 'id' => 'operator_mcc']); ?>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <?php echo $form->labelEx($operator,'mnc', ['class' => 'col-md-3 control-label']); ?>
+                    <div class="col-md-9">
+                        <?php echo $form->textField($operator,'mnc', ['class' => 'form-control', 'id' => 'operator_mnc']); ?>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <?php echo $form->labelEx($operator,'arfcn', ['class' => 'col-md-3 control-label']); ?>
+                    <div class="col-md-9">
+                        <?php echo $form->textField($operator,'arfcn', ['class' => 'form-control', 'id' => 'operator_arfcn']); ?>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <?php echo $form->labelEx($operator,'status', ['class' => 'col-md-3 control-label']); ?>
+                    <div class="col-md-9">
+                        <?php echo $form->dropDownList($operator,'status', [1 => 'Online', 0 => 'Offline'], ['class' => 'form-control', 'id' => 'operator_status']); ?>
+                    </div>
+                </div>
+            </div>
+            <?=$form->hiddenField($operator, 'id', ['id' => 'operator_id'])?>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
                 <button type="button" class="btn btn-primary" id="save-operator">Сохранить</button>
@@ -259,6 +391,7 @@
         $(this).parent().find('.operator-row').removeClass('active');
         $(this).addClass('active');
 
+        $('#editOperator').removeAttr('disabled');
         $('#remove-operator').removeAttr('disabled');
 
     });
@@ -268,7 +401,7 @@
             $('#operator-form input').val('');
             $('#operatorModal').modal('show');
         });
-        $('#save-operator').click(function(){
+        $('#add-operator').click(function(){
             var form = new FormData($('#operator-form')[0]);
 
             var request = $.ajax({
@@ -282,9 +415,11 @@
             request.done(function(operator) {
                 operator = JSON.parse(operator);
 
-                $('.operators-table tbody').append('<tr class="operator-row" operator-id="' + operator.id + '"><td>' + operator.id + '</td><td>' + operator.name + '</td><td>' + operator.mcc + '</td><td>' + operator.mnc + '</td><td>' + operator.arfcn + '</td></tr>');
+                $('.operators-table tbody').append('<tr class="operator-row" operator-id="' + operator.id + '"><td>' + operator.id + '</td><td>' + operator.name + '</td><td>' + operator.mcc + '</td><td>' + operator.mnc + '</td><td>' + operator.arfcn + '</td><td>' + operator.textStatus + '</td></tr>');
 
                 $('#operatorModal').modal('hide');
+                $('#editOperator').attr('disabled','disabled');
+                $('#remove-operator').attr('disabled','disabled');
             });
         });
         $('#remove-operator').click(function(){
@@ -303,6 +438,48 @@
                     $('#remove-operator').attr('disabled', 'disabled');
                 });
         });
+        $('#editOperator').click(function(){
+            var id = $('.operators-table tbody tr.active').attr('operator-id');
+            $.post(
+                Yii.app.createUrl('/ajax/getOperator'),
+                {
+                    id: id
+                }
+            ).done(function (response) {
+                    response = JSON.parse(response);
+
+                    $('#operator_name').val(response.name);
+                    $('#operator_mcc').val(response.mcc);
+                    $('#operator_mnc').val(response.mnc);
+                    $('#operator_arfcn').val(response.arfcn);
+                    $('#operator_id').val(response.id);
+
+                    $('#operator_status option[value=' + response.status+']').attr('selected', 'selected');
+
+                    $('#editOperatorModal').modal('show');
+                });
+        });
+        $('#save-operator').click(function(){
+            var form = new FormData($('#operator-save-form')[0]);
+
+            var request = $.ajax({
+                url: Yii.app.createUrl('/ajax/editOperator'),
+                type: "POST",
+                processData: false,
+                cache: false,
+                contentType: false,
+                data: form
+            });
+            request.done(function(operator) {
+                operator = JSON.parse(operator);
+
+                $('.operators-table tbody tr.active').replaceWith('<tr class="operator-row" operator-id="' + operator.id + '"><td>' + operator.id + '</td><td>' + operator.name + '</td><td>' + operator.mcc + '</td><td>' + operator.mnc + '</td><td>' + operator.arfcn + '</td><td>' + operator.textStatus + '</td></tr>');
+
+                $('#editOperatorModal').modal('hide');
+                $('#editOperator').attr('disabled','disabled');
+                $('#remove-operator').attr('disabled','disabled');
+            });
+        });
 
         $('#dhcp').click(function(){
             if($(this).hasClass('fa-toggle-off'))
@@ -317,4 +494,34 @@
             }
         })
     });
+
+    function saveGsm()
+    {
+        saveSetting('gsm', {'power': $('#gsm_power').val(), 'c0': $('#gsm_c0').val()});
+    }
+    function saveSystem()
+    {
+        saveSetting('system', {'status': $('#system_status option:selected').val()});
+    }
+    function saveVoip()
+    {
+        saveSetting('voip', {'login': $('#voip_login').val(), 'password': $('#voip_password').val()});
+    }
+    function saveNetwork()
+    {
+        var dhcp = '0';
+        if($('#dhcp').hasClass('fa-toggle-on'))
+            dhcp = '1';
+
+        saveSetting('network', {'dhcp': dhcp, 'hostname': $('#network_hostname').val(), 'ip': $('#network_ip').val(), 'mask': $('#network_mask').val(), 'gateway': $('#network_gateway').val(), 'dns': $('#network_dns').val()});
+    }
+    function saveSetting(name, params)
+    {
+        $.post(
+            Yii.app.createUrl('ajax/saveSetting'),
+            {
+                name: name,
+                params: params
+            }).done(function(){});
+    }
 </script>

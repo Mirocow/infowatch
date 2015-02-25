@@ -11,8 +11,12 @@
 ?>
 
 
-
 <div class="content col-md-11">
+    <div class="row">
+        <nav class="breadcrumbs">
+            Мониторинг
+        </nav>
+    </div>
     <ul class="nav nav-tabs">
         <li class="active"><a href="#known" data-toggle="tab">Зарегистрированные</a></li>
         <li><a href="#unknown" data-toggle="tab">Незарегистрированные</a></li>

@@ -117,6 +117,24 @@ class AjaxController extends Controller
                 echo json_encode($person->attributes);
         }
     }
+    public function actionGetGroup()
+    {
+        if(isset($_POST['id']))
+        {
+            $group = Group::model()->findByPk($_POST['id']);
+            if($group)
+                echo json_encode($group->attributes);
+        }
+    }
+    public function actionGetOperator()
+    {
+        if(isset($_POST['id']))
+        {
+            $operator = Operator::model()->findByPk($_POST['id']);
+            if($operator)
+                echo json_encode($operator->attributes);
+        }
+    }
     public function actionSavePerson()
     {
         if(isset($_POST['Person']))
@@ -127,6 +145,16 @@ class AjaxController extends Controller
             echo json_encode($person->attributes);
         }
     }
+    public function actionSaveGroup()
+    {
+        if(isset($_POST['Group']))
+        {
+            $group = Group::model()->findByPk($_POST['Group']['id']);
+            $group->attributes = $_POST['Group'];
+            $group->save();
+            echo json_encode($group->attributes);
+        }
+    }
     public function actionSaveOperator()
     {
         if(isset($_POST['Operator']))
@@ -134,7 +162,21 @@ class AjaxController extends Controller
             $operator = new Operator();
             $operator->attributes = $_POST['Operator'];
             $operator->save();
-            echo json_encode($operator->attributes);
+            $atts = $operator->attributes;
+            $atts['textStatus'] = $operator->getStatus();
+            echo json_encode($atts);
+        }
+    }
+    public function actionEditOperator()
+    {
+        if(isset($_POST['Operator']))
+        {
+            $operator = Operator::model()->findByPk($_POST['Operator']['id']);
+            $operator->attributes = $_POST['Operator'];
+            $operator->save();
+            $atts = $operator->attributes;
+            $atts['textStatus'] = $operator->getStatus();
+            echo json_encode($atts);
         }
     }
 
@@ -162,6 +204,13 @@ class AjaxController extends Controller
                 $response = ['content' => $this->renderPartial('group', compact('group'), true), 'group' => $group->attributes];
                 echo json_encode($response);
             }
+        }
+    }
+    public function actionSaveSetting()
+    {
+        if(isset($_POST['name']))
+        {
+            Settings::model()->updateAll(['value' => json_encode($_POST['params'])], 'name = :name', [':name' => $_POST['name']]);
         }
     }
 }

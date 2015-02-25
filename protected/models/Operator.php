@@ -9,6 +9,7 @@
  * @property string $mcc
  * @property string $mnc
  * @property string $arfcn
+ * @property integer $status
  */
 class Operator extends CActiveRecord
 {
@@ -28,10 +29,11 @@ class Operator extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
+			array('status', 'numerical', 'integerOnly'=>true),
 			array('name, mcc, mnc, arfcn', 'length', 'max'=>45),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, name, mcc, mnc, arfcn', 'safe', 'on'=>'search'),
+			array('id, name, mcc, mnc, arfcn, status', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -53,10 +55,11 @@ class Operator extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'name' => 'Названия',
-			'mcc' => 'MCC',
-			'mnc' => 'MNC',
-			'arfcn' => 'ARFCN',
+			'name' => 'Name',
+			'mcc' => 'Mcc',
+			'mnc' => 'Mnc',
+			'arfcn' => 'Arfcn',
+			'status' => 'Status',
 		);
 	}
 
@@ -83,6 +86,7 @@ class Operator extends CActiveRecord
 		$criteria->compare('mcc',$this->mcc,true);
 		$criteria->compare('mnc',$this->mnc,true);
 		$criteria->compare('arfcn',$this->arfcn,true);
+		$criteria->compare('status',$this->status);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -99,4 +103,12 @@ class Operator extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+
+    public function getStatus()
+    {
+        if($this->status)
+            return 'Online';
+        else
+            return 'Offline';
+    }
 }
