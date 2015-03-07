@@ -1,4 +1,4 @@
-
+@overallHeight: calc(~"100vh - 200px");
 tr.person-row,
 tr.operator-row {
   td {
@@ -23,7 +23,7 @@ nav.navbar {
   }
 }
 .left-menu {
-  height: 100vh;
+  height: calc(~"100vh - 200px");
   font-family: Tahoma, Helvetica, 'Arial sans-serif';
   font-size: 10.8px;
   background: url(../img/nav-bg.jpg);
@@ -32,7 +32,8 @@ nav.navbar {
   width: 100px;
   .endblack {
     background-color: #101010;
-    height: 100%;
+    height: calc(~"100vh - 333px");
+
   }
   .heading {
     border-top: 1px solid #2e2e2e;
@@ -119,7 +120,7 @@ nav.navbar {
   padding: 10px 50px;
   border-left: 1px solid #ccc;
   box-shadow: -5px 0 8px -3px rgba(0,0,0,.09);
-  height: calc(~"100vh + 226px");
+  height: calc(~"100vh - 107px");
 }
 .breadcrumbs {
   position: relative;
@@ -142,4 +143,24 @@ nav.navbar {
     margin-bottom: 0;
     margin-top: 21px;
   }
+}
+
+.unknown-device {
+  cursor: pointer;
+}
+.persons-table {
+  border-top: 1px solid #000000;
+  padding-top: 10px;
+  margin-top: 10px;
+}
+
+#edit-group-form {
+  i {
+    padding-top: 10px;
+    cursor: pointer;
+  }
+}
+.main-persons {
+  border-left: 1px solid #000000;
+  padding-left: 0;
 }

@@ -24,33 +24,30 @@
     </div>
     <div class="col-md-4">
         <div class="row">
-            <div class="row">
-                <div class="col-md-12">
-                    <div id="jstree">
-                        <ul>
-                            <li id="root" data-jstree='{"type":"root"}'>Группы
-                                <ul><?=$tree?>
-                                    <!--
-                                    <?php /*foreach($persons as $group): */?>
-                                        <li data-jstree='{"type":"group"}' group_id="<?/*=$group['group']->id;*/?>"><?/*=$group['group']->name;*/?>
-                                            <ul>
-                                                <?php /*foreach($group['persons'] as $person): */?>
-                                                    <li data-jstree='{"type":"person"}' person_id="<?/*=$person->id;*/?>"><?/*=$person->name;*/?></li>
-                                                <?php /*endforeach;*/?>
-                                            </ul>
-                                        </li>
-                                    <?php /*endforeach;*/?>
-                                    </li>-->
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
+            <div class="col-md-12">
+                <div id="jstree">
+                    <ul>
+                        <li id="root" data-jstree='{"type":"root"}'>Группы
+                            <ul><?=$tree?>
+                                <!--
+                                <?php /*foreach($persons as $group): */?>
+                                    <li data-jstree='{"type":"group"}' group_id="<?/*=$group['group']->id;*/?>"><?/*=$group['group']->name;*/?>
+                                        <ul>
+                                            <?php /*foreach($group['persons'] as $person): */?>
+                                                <li data-jstree='{"type":"person"}' person_id="<?/*=$person->id;*/?>"><?/*=$person->name;*/?></li>
+                                            <?php /*endforeach;*/?>
+                                        </ul>
+                                    </li>
+                                <?php /*endforeach;*/?>
+                                </li>-->
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
-
     </div>
-    <div class="col-md-8">
+    <div class="col-md-8 main-persons">
 
         <div class="col-md-12" id="person-buttons" style="margin-bottom: 20px; display: none;">
             <button type="button" class="btn btn-default" id="edit-person" disabled="disabled"><i class="glyphicon glyphicon-pencil"></i> Изменить</button>
@@ -191,19 +188,22 @@
                         <div class="form-group">
                             <?php echo $form->labelEx($group,'voice', ['class' => 'col-md-3 control-label']); ?>
                             <div class="col-md-9">
-                                <?php echo $form->checkBox($group,'voice', ['class' => 'form-control', 'id' => 'group_voice']); ?>
+                                <i class="fa fa-toggle-off" id="group-voice-toggle"></i>
+                                <?php echo $form->checkBox($group,'voice', ['class' => 'form-control', 'id' => 'group_voice', 'style' => 'display: none;']); ?>
                             </div>
                         </div>
                         <div class="form-group">
                             <?php echo $form->labelEx($group,'sms', ['class' => 'col-md-3 control-label']); ?>
                             <div class="col-md-9">
-                                <?php echo $form->checkBox($group,'sms', ['class' => 'form-control', 'id' => 'group_sms']); ?>
+                                <i class="fa fa-toggle-off" id="group-sms-toggle"></i>
+                                <?php echo $form->checkBox($group,'sms', ['class' => 'form-control', 'id' => 'group_sms', 'style' => 'display: none;']); ?>
                             </div>
                         </div>
                         <div class="form-group">
                             <?php echo $form->labelEx($group,'greet', ['class' => 'col-md-3 control-label']); ?>
                             <div class="col-md-9">
-                                <?php echo $form->checkBox($group,'greet', ['class' => 'form-control', 'id' => 'group_greet']); ?>
+                                <i class="fa fa-toggle-off" id="group-greet-toggle"></i>
+                                <?php echo $form->checkBox($group,'greet', ['class' => 'form-control', 'id' => 'group_greet', 'style' => 'display: none;']); ?>
                             </div>
                         </div>
                         <div class="form-group">
@@ -282,19 +282,37 @@
                     $('#group_greet_message').val(response.greet_message);
 
                     if(response.voice == '1')
+                    {
                         $('#group_voice').attr('checked', 'checked');
+                        $('#group-voice-toggle').removeClass('fa-toggle-off').addClass('fa-toggle-on');
+                    }
                     else
+                    {
                         $('#group_voice').removeAttr('checked');
+                        $('#group-voice-toggle').addClass('fa-toggle-off').removeClass('fa-toggle-on');
+                    }
 
                     if(response.sms == '1')
+                    {
                         $('#group_sms').attr('checked', 'checked');
+                        $('#group-sms-toggle').removeClass('fa-toggle-off').addClass('fa-toggle-on');
+                    }
                     else
+                    {
                         $('#group_sms').removeAttr('checked');
+                        $('#group-sms-toggle').addClass('fa-toggle-off').removeClass('fa-toggle-on');
+                    }
 
                     if(response.greet == '1')
+                    {
                         $('#group_greet').attr('checked', 'checked');
+                        $('#group-greet-toggle').removeClass('fa-toggle-off').addClass('fa-toggle-on');
+                    }
                     else
+                    {
                         $('#group_greet').removeAttr('checked');
+                        $('#group-greet-toggle').addClass('fa-toggle-off').removeClass('fa-toggle-on');
+                    }
 
                     $('#group_id').val(groupId);
 
@@ -336,6 +354,19 @@
                 $('#jstree li[group_id=' + response.id + '] a').html('<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image: url(<?=Yii::app()->request->baseUrl?>/img/folder_tm.png); background-size: auto; background-position: 50% 50%;"></i>' + response.name);
                 $('#editGroupModal').modal('hide');
             });
+        });
+
+        $('#edit-group-form i').click(function() {
+            var checkbox = $(this).parent().find('input[type=checkbox]');
+
+            if($(checkbox).prop('checked')) {
+                $(checkbox).prop('checked', false);
+                $(this).removeClass('fa-toggle-on').addClass('fa-toggle-off');
+            }
+            else {
+                $(checkbox).prop('checked', true);
+                $(this).addClass('fa-toggle-on').removeClass('fa-toggle-off');
+            }
         });
     });
 </script>

@@ -213,4 +213,15 @@ class AjaxController extends Controller
             Settings::model()->updateAll(['value' => json_encode($_POST['params'])], 'name = :name', [':name' => $_POST['name']]);
         }
     }
+    public function actionAddPerson(){
+        if(isset($_POST['Person'])) {
+            $person = new Person();
+            $person->attributes = $_POST['Person'];
+            if($person->validate() && $person->save())
+            {
+                Device::model()->updateAll(['person_id' => $person->getPrimaryKey()], 'imsi = :imsi', [':imsi' => $person->imsi]);
+                echo json_encode($person->attributes);
+            }
+        }
+    }
 }

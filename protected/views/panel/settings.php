@@ -208,6 +208,12 @@
                                         <input type="text" maxlength="15" class="input" size="15" id="voip_password" name="gsm_power" value="<?=$voip['password'];?>">
                                     </td>
                                 </tr>
+                                <tr>
+                                    <th>Пароль</th>
+                                    <td>
+                                        <input type="text" maxlength="15" class="input" disabled size="15" id="voip_operator" name="gsm_operator" value="MTS">
+                                    </td>
+                                </tr>
                                 </tbody></table>
 
                             <center><input class="btn btn-primary" style="width: 219px" type="button" value="Сохранить" onclick="saveVoip();"></center>
@@ -244,7 +250,9 @@
                             <thead>
                             <tr>
                                 <th>Время</th>
-                                <th>Событие</th>
+                                <th>От</th>
+                                <th>Кому</th>
+                                <th>Описание</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -252,6 +260,12 @@
                                 <tr>
                                     <td class="col-md-2">
                                         <?=$log->happened;?>
+                                    </td>
+                                    <td>
+                                        <?=$log->from;?>
+                                    </td>
+                                    <td>
+                                        <?=$log->to;?>
                                     </td>
                                     <td>
                                         <?=$log->details;?>

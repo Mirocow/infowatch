@@ -14,7 +14,7 @@
     <script type="application/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/fw/jquery.js"></script>
     <script type="application/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/fw/bootstrap/js/bootstrap.min.js"></script>
     <script type="application/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/fw/jstree/jstree.min.js"></script>
-	<title><?php echo CHtml::encode($this->pageTitle); ?></title>
+	<title>InfoWatch GSM Monitor</title>
 </head>
 
 <body>
