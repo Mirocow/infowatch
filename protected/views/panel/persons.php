@@ -550,7 +550,7 @@
                         // in case of 'rename_node' node_position is filled with the new node name
 
                         if (operation === "move_node") {
-                            return ((node.type === "person" && node_parent.type === "group") || (node.type === "group" && node_parent.type === "group")); //only allow dropping inside nodes of type 'Parent'
+                            return ((node.type === "person" && node_parent.type === "group")); //only allow dropping inside nodes of type 'Parent'
                         }
                         return true;  //allow all other operations
                     }
@@ -571,7 +571,7 @@
                                         "seperator_after": false,
                                         "label": "Группу",
                                         action: function (obj) {
-                                            if($node.id == 'root' || $node.type == 'group')
+                                            if($node.id == 'root')
                                             {
                                                 var parent = null;
                                                 if($node.type == 'group')
@@ -580,7 +580,7 @@
                                                     Yii.app.createUrl('/ajax/createGroup'),
                                                     {
                                                         parent: parent,
-                                                        name: 'Нвоая группа'
+                                                        name: 'Новая группа'
                                                     }
                                                 ).done(function(response)
                                                     {
@@ -673,7 +673,7 @@
                     "group" : {
                         "icon": "/img/folder_tm.png",
                         max_depth: 5,
-                        'valid_children ': ['person', 'group']
+                        'valid_children ': ['person']
                     },
                     "person" : {
                         "max_children" : 0,
