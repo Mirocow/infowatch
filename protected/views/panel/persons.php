@@ -51,11 +51,9 @@
 
         <div class="col-md-12" id="person-buttons" style="margin-bottom: 20px; display: none;">
             <button type="button" class="btn btn-default" id="edit-person" disabled="disabled"><i class="glyphicon glyphicon-pencil"></i> Изменить</button>
-            <button type="button" class="btn btn-default" id="remove-person" disabled="disabled"><i class="glyphicon glyphicon-remove"></i> Удалить</button>
         </div>
         <div class="col-md-12" id="group-buttons" style="margin-bottom: 20px; display: none;">
             <button type="button" class="btn btn-default" id="edit-group" disabled="disabled"><i class="glyphicon glyphicon-pencil"></i> Изменить</button>
-            <button type="button" class="btn btn-default" id="remove-group" disabled="disabled"><i class="glyphicon glyphicon-remove"></i> Удалить</button>
         </div>
         <div class="col-md-12" id="details">
 
@@ -153,6 +151,7 @@
                         <?php echo $form->textArea($person,'id', ['class' => 'form-control', 'style' => 'display: none;', 'id' => 'person_id']); ?>
                     </div>
                     <div class="modal-footer">
+                        <button type="button" class="btn btn-danger pull-left" id="remove-person" disabled="disabled"><i class="glyphicon glyphicon-remove"></i> Удалить</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
                         <button type="button" class="btn btn-primary" id="save-person">Сохранить</button>
                     </div>
@@ -215,6 +214,7 @@
                         <?php echo $form->textArea($group,'id', ['class' => 'form-control', 'style' => 'display: none;', 'id' => 'group_id']); ?>
                     </div>
                     <div class="modal-footer">
+                        <button type="button" class="btn btn-danger pull-left" id="remove-group" disabled="disabled"><i class="glyphicon glyphicon-remove"></i> Удалить</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
                         <button type="button" class="btn btn-primary" id="save-group">Сохранить</button>
                     </div>
@@ -284,34 +284,34 @@
                     if(response.voice == '1')
                     {
                         $('#group_voice').attr('checked', 'checked');
-                        $('#group-voice-toggle').removeClass('fa-toggle-off').addClass('fa-toggle-on');
+                        $('#group-voice-toggle').removeClass('fa-toggle-off').removeClass('text-danger').addClass('fa-toggle-on').addClass('text-success');
                     }
                     else
                     {
                         $('#group_voice').removeAttr('checked');
-                        $('#group-voice-toggle').addClass('fa-toggle-off').removeClass('fa-toggle-on');
+                        $('#group-voice-toggle').addClass('fa-toggle-off').addClass('text-danger').removeClass('fa-toggle-on').removeClass('text-success');
                     }
 
                     if(response.sms == '1')
                     {
                         $('#group_sms').attr('checked', 'checked');
-                        $('#group-sms-toggle').removeClass('fa-toggle-off').addClass('fa-toggle-on');
+                        $('#group-sms-toggle').removeClass('fa-toggle-off').removeClass('text-danger').addClass('fa-toggle-on').addClass('text-success');
                     }
                     else
                     {
                         $('#group_sms').removeAttr('checked');
-                        $('#group-sms-toggle').addClass('fa-toggle-off').removeClass('fa-toggle-on');
+                        $('#group-sms-toggle').addClass('fa-toggle-off').addClass('text-danger').removeClass('fa-toggle-on').removeClass('text-success')
                     }
 
                     if(response.greet == '1')
                     {
                         $('#group_greet').attr('checked', 'checked');
-                        $('#group-greet-toggle').removeClass('fa-toggle-off').addClass('fa-toggle-on');
+                        $('#group-greet-toggle').removeClass('fa-toggle-off').removeClass('text-danger').addClass('fa-toggle-on').addClass('text-success');
                     }
                     else
                     {
                         $('#group_greet').removeAttr('checked');
-                        $('#group-greet-toggle').addClass('fa-toggle-off').removeClass('fa-toggle-on');
+                        $('#group-greet-toggle').addClass('fa-toggle-off').addClass('text-danger').removeClass('fa-toggle-on').removeClass('text-success')
                     }
 
                     $('#group_id').val(groupId);
@@ -361,11 +361,11 @@
 
             if($(checkbox).prop('checked')) {
                 $(checkbox).prop('checked', false);
-                $(this).removeClass('fa-toggle-on').addClass('fa-toggle-off');
+                $(this).removeClass('fa-toggle-on').removeClass('text-success').addClass('fa-toggle-off').addClass('text-danger');
             }
             else {
                 $(checkbox).prop('checked', true);
-                $(this).addClass('fa-toggle-on').removeClass('fa-toggle-off');
+                $(this).addClass('fa-toggle-on').addClass('text-success').removeClass('fa-toggle-off').removeClass('text-danger');
             }
         });
     });

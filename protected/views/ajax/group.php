@@ -24,7 +24,7 @@
             Контроль голосового траффика:
         </div>
         <div class="col-md-2">
-            <i class="fa <?=$group->voice ? 'fa-toggle-on' : 'fa-toggle-off';?>"></i>
+            <i class="fa <?=$group->voice ? 'fa-toggle-on text-success' : 'fa-toggle-off text-danger';?>"></i>
         </div>
     </div>
     <div class="row">
@@ -32,7 +32,7 @@
             Контроль SMS-траффика:
         </div>
         <div class="col-md-2">
-            <i class="fa <?=$group->sms ? 'fa-toggle-on' : 'fa-toggle-off';?>"></i>
+            <i class="fa <?=$group->sms ? 'fa-toggle-on text-success' : 'fa-toggle-off text-danger';?>"></i>
         </div>
     </div>
     <div class="row">
@@ -40,7 +40,7 @@
             Приветственное сообщение:
         </div>
         <div class="col-md-2">
-            <i class="fa <?=$group->greet ? 'fa-toggle-on' : 'fa-toggle-off';?>"></i>
+            <i class="fa <?=$group->greet ? 'fa-toggle-on text-success' : 'fa-toggle-off text-danger';?>"></i>
         </div>
     </div>
     <div class="row">

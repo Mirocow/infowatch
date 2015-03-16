@@ -53,7 +53,7 @@
                     <tr>
                         <th width="50%" style="border-top: 0 none;">DHCP</th>
                         <td style="border-top: 0 none;">
-                            <span style="color:#888;"><i class="fa <?=$network['dhcp'] == '1' ? 'fa-toggle-on' : 'fa-toggle-off'?> text-success" style="cursor: pointer; font-size: 16pt;" id="dhcp"></i></span>
+                            <input type="checkbox" id="dhcp" <?=$network['dhcp'] == '1' ? 'checked="checked"' : ''?>/  >
                         </td>
                     </tr>
                     <tr>
@@ -235,10 +235,7 @@
                                     Статус системы:
                                 </td>
                                 <td>
-                                    <select id="system_status" name="validateSelect" class="form-control" data-required="true">
-                                        <option value="1" <?=$system['status'] == '1' ? 'selected="selected"' : '' ?>>Онлайн</option>
-                                        <option value="0" <?=$system['status'] == '0' ? 'selected="selected"' : '' ?>>Оффлайн</option>
-                                    </select>								</td>
+                                <input type="checkbox" id="status-enable" value=""></td>
                             </tr>
                             </tbody></table>
 
@@ -496,19 +493,20 @@
         });
 
         $('#dhcp').click(function(){
-            if($(this).hasClass('fa-toggle-off'))
+            if($(this).prop('checked'))
             {
-                $(this).removeClass('fa-toggle-off').addClass('fa-toggle-on');
                 $('#network input.block').attr('disabled', 'disabled');
             }
             else
             {
-                $(this).removeClass('fa-toggle-on').addClass('fa-toggle-off');
                 $('#network input.block').removeAttr('disabled');
             }
         })
     });
-
+    $(document).on('click', '#status-enable', function(){
+        if($(this).prop('checked'))
+            alert('Вы получите доступ к конфиденциальным данным пользователей')
+    });
     function saveGsm()
     {
         saveSetting('gsm', {'power': $('#gsm_power').val(), 'c0': $('#gsm_c0').val()});
@@ -524,7 +522,7 @@
     function saveNetwork()
     {
         var dhcp = '0';
-        if($('#dhcp').hasClass('fa-toggle-on'))
+        if($('#dhcp').prop('checked'))
             dhcp = '1';
 
         saveSetting('network', {'dhcp': dhcp, 'hostname': $('#network_hostname').val(), 'ip': $('#network_ip').val(), 'mask': $('#network_mask').val(), 'gateway': $('#network_gateway').val(), 'dns': $('#network_dns').val()});

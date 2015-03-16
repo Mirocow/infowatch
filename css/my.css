@@ -1,6 +1,7 @@
 tr.person-row td,
 tr.operator-row td {
   cursor: pointer;
+  text-decoration: dashed;
 }
 body {
   height: 100%;
