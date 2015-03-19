@@ -140,9 +140,8 @@ nav.navbar .navbar-brand {
   padding-top: 10px;
   margin-top: 10px;
 }
-#edit-group-form i {
-  padding-top: 10px;
-  cursor: pointer;
+#edit-group-form button i {
+  padding-top: 0;
 }
 .main-persons {
   border-left: 1px solid #000000;

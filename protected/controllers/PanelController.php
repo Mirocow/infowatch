@@ -32,6 +32,11 @@ class PanelController extends Controller {
         $groups = Group::model()->findAllByAttributes(['parent_id' => null]);
 
         $tree = $this->displayTree($groups);
+
+        foreach(Person::model()->findAllByAttributes(['group_id' => null]) as $person)
+        {
+            $tree .= '<li data-jstree=\'{"type":"person"}\' id="p'.$person->id.'" person_id="'.$person->id.'">'.$person->name.'</li>';
+        }
         
         $allPersons = Person::model()->findAll();
 

@@ -50,9 +50,13 @@
     <div class="col-md-8 main-persons">
 
         <div class="col-md-12" id="person-buttons" style="margin-bottom: 20px; display: none;">
+            <button type="button" class="btn btn-default add-person"><i class="fa fa-plus"></i> Добавить пользователя</button>
+            <button type="button" class="btn btn-default add-group"><i class="fa fa-plus"></i> Добавить группу</button>
             <button type="button" class="btn btn-default" id="edit-person" disabled="disabled"><i class="glyphicon glyphicon-pencil"></i> Изменить</button>
         </div>
         <div class="col-md-12" id="group-buttons" style="margin-bottom: 20px; display: none;">
+            <button type="button" class="btn btn-default add-person"><i class="fa fa-plus"></i> Добавить пользователя</button>
+            <button type="button" class="btn btn-default add-group"><i class="fa fa-plus"></i> Добавить группу</button>
             <button type="button" class="btn btn-default" id="edit-group" disabled="disabled"><i class="glyphicon glyphicon-pencil"></i> Изменить</button>
         </div>
         <div class="col-md-12" id="details">
@@ -224,6 +228,55 @@
     </div>
 </div>
 <script>
+
+    $(document).on('click', '.add-person', function(e){
+        $.post(
+            Yii.app.createUrl('/ajax/createPerson'),
+            {
+                groupId: null
+            }
+        ).done(function(response)
+            {
+                response = JSON.parse(response);
+
+                $node = $('#jstree').jstree(true).create_node('root', {
+                    "li_attr": {
+                        "type": "user",
+                        "parent": null,
+                        "person_id": response.id
+                    }
+                });
+
+                $('#jstree').jstree(true).set_text($node, "Новый пользователь");
+                $('#jstree').jstree(true).set_type($node, "person");
+                $('#jstree').jstree(true).edit($node);
+            });
+    });
+    $(document).on('click', '.add-group', function(e){
+        var parent = null;
+        $.post(
+            Yii.app.createUrl('/ajax/createGroup'),
+            {
+                parent: parent,
+                name: 'Новая группа'
+            }
+        ).done(function(response)
+            {
+                response = JSON.parse(response);
+
+
+                $node = $('#jstree').jstree(true).create_node('root' /*$node*/, {
+                    "li_attr": {
+                        "type": "group",
+                        "parent": parent,
+                        "group_id": response.id
+                    }
+                });
+                $('#jstree').jstree(true).set_type($node, "group");
+                $('#jstree').jstree(true).set_text($node, "Новая группа");
+                $('#jstree').jstree(true).edit($node);
+            });
+    });
     $(document).on('click', '.person-row', function(e){
         var id = $(this).attr('person-id');
         drawUser(id);
@@ -232,7 +285,6 @@
     });
     $(document).ready(function(){
         $('#remove-person').click(function(){
-            var id = $('.persons-table tbody tr.active').attr('person-id');
 
             var url = Yii.app.createUrl('/ajax/deletePerson');
 
@@ -240,12 +292,14 @@
             $.post(
                 url,
                 {
-                    id:  id
+                    id:  personId
                 }
             ).done(function(response){
-                    $('li[person_id=' + id + ']').remove();
-                    $('.persons-table tbody tr.active').remove();
-                    //$('#remove-person').attr('disabled', 'disabled');
+                    var instance = $('#jstree').jstree(true);
+                    instance.delete_node(instance.get_selected());
+                    $('#editPersonModal').modal('hide');
+                    $('#details').html('');
+                    $('#edit-person').attr('disabled', 'disabled');
                 });
         });
         $('#edit-person').click(function(){
@@ -571,11 +625,11 @@
                                         "seperator_after": false,
                                         "label": "Группу",
                                         action: function (obj) {
-                                            if($node.id == 'root')
-                                            {
+                                            //if($node.id == 'root')
+                                            //{
                                                 var parent = null;
-                                                if($node.type == 'group')
-                                                    parent = $node.li_attr.group_id;
+//                                                if($node.type == 'group')
+                                                    //parent = null;//$node.li_attr.group_id;
                                                 $.post(
                                                     Yii.app.createUrl('/ajax/createGroup'),
                                                     {
@@ -587,7 +641,7 @@
                                                         response = JSON.parse(response);
 
 
-                                                        $node = tree.create_node($node, {
+                                                        $node = tree.create_node('root' /*$node*/, {
                                                             "li_attr": {
                                                                 "type": "group",
                                                                 "parent": parent,
@@ -598,7 +652,7 @@
                                                         tree.set_text($node, "Новая группа");
                                                         tree.edit($node);
                                                     });
-                                            }
+                                            //}
                                         }
                                     },
                                     "create_folder": {
@@ -684,7 +738,7 @@
                     'check_while_dragging': true,
                     copy: false
                 },
-                "plugins" : [ "contextmenu", "dnd", "search", "state", "types", "wholerow" ]
+                "plugins" : [ "contextmenu", "dnd", "search", "state", "types", "wholerow", "crrm" ]
             });
     });
 </script>
