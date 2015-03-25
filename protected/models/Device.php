@@ -115,4 +115,15 @@ class Device extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+
+
+    public function getDeviceName()
+    {
+        if($this->tac)
+        {
+            return $this->tac->model;
+        }
+        else
+            return 'Unknown device';
+    }
 }
