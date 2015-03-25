@@ -49,14 +49,14 @@
             <table class="table table-striped table-hover uknown-devices">
                 <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>Устройство</th>
                     <th>Дата</th>
                 </tr>
                 </thead>
                 <tbody>
                 <?php foreach($unknownDevices as $device): ?>
                     <tr class="unknown-device" imsi="<?=$device->imsi?>">
-                        <td><?=md5($device->imsi);?></td>
+                        <td><?=$device->getDeviceName();?></td>
                         <td><?=date('Y-m-d H:i:s',$device->created);?></td>
                     </tr>
                 <?php endforeach; ?>
