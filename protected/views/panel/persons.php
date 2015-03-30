@@ -191,22 +191,19 @@
                         <div class="form-group">
                             <?php echo $form->labelEx($group,'voice', ['class' => 'col-md-3 control-label']); ?>
                             <div class="col-md-9">
-                                <i class="fa fa-toggle-off" id="group-voice-toggle"></i>
-                                <?php echo $form->checkBox($group,'voice', ['class' => 'form-control', 'id' => 'group_voice', 'style' => 'display: none;']); ?>
+                                <?php echo $form->checkBox($group,'voice', ['class' => 'form-control', 'id' => 'group_voice']); ?>
                             </div>
                         </div>
                         <div class="form-group">
                             <?php echo $form->labelEx($group,'sms', ['class' => 'col-md-3 control-label']); ?>
                             <div class="col-md-9">
-                                <i class="fa fa-toggle-off" id="group-sms-toggle"></i>
-                                <?php echo $form->checkBox($group,'sms', ['class' => 'form-control', 'id' => 'group_sms', 'style' => 'display: none;']); ?>
+                                <?php echo $form->checkBox($group,'sms', ['class' => 'form-control', 'id' => 'group_sms']); ?>
                             </div>
                         </div>
                         <div class="form-group">
                             <?php echo $form->labelEx($group,'greet', ['class' => 'col-md-3 control-label']); ?>
                             <div class="col-md-9">
-                                <i class="fa fa-toggle-off" id="group-greet-toggle"></i>
-                                <?php echo $form->checkBox($group,'greet', ['class' => 'form-control', 'id' => 'group_greet', 'style' => 'display: none;']); ?>
+                                <?php echo $form->checkBox($group,'greet', ['class' => 'form-control', 'id' => 'group_greet']); ?>
                             </div>
                         </div>
                         <div class="form-group">
@@ -338,34 +335,28 @@
                     if(response.voice == '1')
                     {
                         $('#group_voice').attr('checked', 'checked');
-                        $('#group-voice-toggle').removeClass('fa-toggle-off').removeClass('text-danger').addClass('fa-toggle-on').addClass('text-success');
                     }
                     else
                     {
                         $('#group_voice').removeAttr('checked');
-                        $('#group-voice-toggle').addClass('fa-toggle-off').addClass('text-danger').removeClass('fa-toggle-on').removeClass('text-success');
                     }
 
                     if(response.sms == '1')
                     {
                         $('#group_sms').attr('checked', 'checked');
-                        $('#group-sms-toggle').removeClass('fa-toggle-off').removeClass('text-danger').addClass('fa-toggle-on').addClass('text-success');
                     }
                     else
                     {
                         $('#group_sms').removeAttr('checked');
-                        $('#group-sms-toggle').addClass('fa-toggle-off').addClass('text-danger').removeClass('fa-toggle-on').removeClass('text-success')
                     }
 
                     if(response.greet == '1')
                     {
                         $('#group_greet').attr('checked', 'checked');
-                        $('#group-greet-toggle').removeClass('fa-toggle-off').removeClass('text-danger').addClass('fa-toggle-on').addClass('text-success');
                     }
                     else
                     {
                         $('#group_greet').removeAttr('checked');
-                        $('#group-greet-toggle').addClass('fa-toggle-off').addClass('text-danger').removeClass('fa-toggle-on').removeClass('text-success')
                     }
 
                     $('#group_id').val(groupId);

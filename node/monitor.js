@@ -1,7 +1,7 @@
 var zmq = require('zmq');
 var Sequelize = require('sequelize');
 
-var sequelize = new Sequelize('cells', 'root', '884088',{
+var sequelize = new Sequelize('infowatch', 'root', '884088',{
     'host' : 'localhost'
 });
 

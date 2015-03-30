@@ -53,7 +53,7 @@
                     <tr>
                         <th width="50%" style="border-top: 0 none;">DHCP</th>
                         <td style="border-top: 0 none;">
-                            <input type="checkbox" id="dhcp" <?=$network['dhcp'] == '1' ? 'checked="checked"' : ''?>/  >
+                            <input type="checkbox" id="dhcp" <?=$network['dhcp'] == '1' ? 'checked="checked"' : ''?> style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);"/>
                         </td>
                     </tr>
                     <tr>

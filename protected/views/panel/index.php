@@ -23,7 +23,7 @@
     </ul>
     <div id="myTabContent" class="tab-content">
         <div class="tab-pane fade active in" id="known">
-            <table class="table table-striped table-hover ">
+            <table class="table table-striped">
                 <thead>
                 <tr>
                     <th>ФИО</th>
