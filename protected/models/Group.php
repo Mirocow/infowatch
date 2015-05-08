@@ -64,13 +64,13 @@ class Group extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'name' => 'Name',
-			'voice' => 'Voice',
-			'sms' => 'Sms',
-			'greet' => 'Greet',
-			'greet_message' => 'Greet Message',
-			'parent_id' => 'Parent',
+			'id' => '№',
+			'name' => 'Название',
+			'voice' => 'Звонки',
+			'sms' => 'СМС',
+			'greet' => 'Приветствие',
+			'greet_message' => 'Текст приветствия',
+			'parent_id' => 'Родительская категория',
 		);
 	}
 

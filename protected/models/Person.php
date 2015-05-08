@@ -7,6 +7,7 @@
  * @property integer $id
  * @property string $name
  * @property string $job
+ * @property string $country
  * @property string $department
  * @property string $boss
  * @property string $phone
@@ -41,7 +42,7 @@ class Person extends CActiveRecord
 			array('name, info', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, name, job, department, boss, phone, imsi, info, group_id', 'safe', 'on'=>'search'),
+			array('id, name, job, department, boss, phone, imsi, info, group_id, country', 'safe'),
 		);
 	}
 
@@ -72,6 +73,7 @@ class Person extends CActiveRecord
 			'phone' => 'Телефон',
 			'imsi' => 'IMSI',
 			'info' => 'Информация',
+			'country' => 'Страна',
 			'group_id' => 'Группа',
 		);
 	}
@@ -124,6 +126,13 @@ class Person extends CActiveRecord
     {
         if($this->group)
             return $this->group->name;
+        else
+            return '-';
+    }
+    public function getCountry()
+    {
+        if($this->country)
+            return $this->country;
         else
             return '-';
     }

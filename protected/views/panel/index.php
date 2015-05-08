@@ -27,8 +27,12 @@
                 <thead>
                 <tr>
                     <th>ФИО</th>
+                    <th>Страна</th>
+                    <th>Оператор</th>
+                    <th>Группа</th>
                     <th>IMEI</th>
                     <th>IMSI</th>
+                    <th>Номер телефона</th>
                     <th>Дата</th>
                 </tr>
                 </thead>
@@ -36,8 +40,12 @@
                 <?php foreach($knownDevices as $device): ?>
                     <tr>
                         <td><?=$device->person->name;?></td>
+                        <td><?=$device->person->getCountry();?></td>
+                        <td><?=$device->getOperator();?></td>
+                        <td><?=$device->person->getGroup();?></td>
                         <td><?=$device->imei;?></td>
                         <td><?=$device->imsi;?></td>
+                        <td><?=$device->person->phone;?></td>
                         <td><?=date('Y-m-d H:i:s',$device->created);?></td>
                     </tr>
                 <?php endforeach; ?>
@@ -89,6 +97,12 @@
                     </div>
                 </div>
 
+                <div class="form-group">
+                    <?php echo $form->labelEx($person,'country', ['class' => 'col-md-3 control-label']); ?>
+                    <div class="col-md-9">
+                        <?php echo $form->textField($person,'country', ['class' => 'form-control', 'id' => 'person_country']); ?>
+                    </div>
+                </div>
                 <div class="form-group">
                     <?php echo $form->labelEx($person,'job', ['class' => 'col-md-3 control-label']); ?>
                     <div class="col-md-9">
@@ -143,6 +157,7 @@
         $('#person_imsi').val($('.unknown-device.warning').attr('imsi'));
         $('#person_name').val('');
         $('#person_job').val('');
+        $('#person_country').val('');
         $('#person_department').val('');
         $('#person_boss').val('');
         $('#person_phone').val('');

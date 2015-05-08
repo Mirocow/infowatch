@@ -215,7 +215,7 @@
                         <?php echo $form->textArea($group,'id', ['class' => 'form-control', 'style' => 'display: none;', 'id' => 'group_id']); ?>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger pull-left" id="remove-group" disabled="disabled"><i class="glyphicon glyphicon-remove"></i> Удалить</button>
+<!--                        <button type="button" class="btn btn-danger pull-left" id="remove-group" disabled="disabled"><i class="glyphicon glyphicon-remove"></i> Удалить</button>-->
                         <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
                         <button type="button" class="btn btn-primary" id="save-group">Сохранить</button>
                     </div>
@@ -452,7 +452,7 @@
 
             type = 'group';
             $('#edit-group').removeAttr('disabled');
-            $('#remove-group').removeAttr('disabled');
+            //$('#remove-group').removeAttr('disabled');
 
             $('#group-buttons').show();
             $('#person-buttons').hide();

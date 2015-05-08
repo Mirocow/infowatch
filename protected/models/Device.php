@@ -126,4 +126,13 @@ class Device extends CActiveRecord
         else
             return 'Unknown device';
     }
+    public function getOperator()
+    {
+        if($this->mnc)
+        {
+            return $this->mnc->operator;
+        }
+        else
+            return '-';
+    }
 }
