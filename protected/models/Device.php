@@ -135,4 +135,13 @@ class Device extends CActiveRecord
         else
             return '-';
     }
+    public function getManufacturer()
+    {
+        if($this->tac)
+        {
+            return $this->tac->manufacter;
+        }
+        else
+            return '-';
+    }
 }

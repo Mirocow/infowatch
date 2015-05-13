@@ -276,9 +276,10 @@
     });
     $(document).on('click', '.person-row', function(e){
         var id = $(this).attr('person-id');
-        drawUser(id);
+        showUserForm(id);
+        /*drawUser(id);
         $('#jstree')
-            .jstree('deselect_all').jstree('select_node', 'p' + id);
+            .jstree('deselect_all').jstree('select_node', 'p' + id);*/
     });
     $(document).ready(function(){
         $('#remove-person').click(function(){
@@ -300,25 +301,7 @@
                 });
         });
         $('#edit-person').click(function(){
-            $.post(
-                Yii.app.createUrl('/ajax/getPerson'),
-                {
-                    id: personId
-                }
-            ).done(function (response) {
-                    response = JSON.parse(response);
-
-                    $('#person_name').val(response.name);
-                    $('#person_job').val(response.job);
-                    $('#person_department').val(response.department);
-                    $('#person_boss').val(response.boss);
-                    $('#person_phone').val(response.phone);
-                    $('#person_imsi').val(response.imsi);
-                    $('#person_info').val(response.info);
-                    $('#person_id').val(personId);
-
-                    $('#editPersonModal').modal('show');
-                });
+            showUserForm(personId);
         });
         $('#edit-group').click(function(){
             $.post(
@@ -414,6 +397,29 @@
             }
         });
     });
+
+    function showUserForm(uid)
+    {
+        $.post(
+            Yii.app.createUrl('/ajax/getPerson'),
+            {
+                id: uid
+            }
+        ).done(function (response) {
+                response = JSON.parse(response);
+
+                $('#person_name').val(response.name);
+                $('#person_job').val(response.job);
+                $('#person_department').val(response.department);
+                $('#person_boss').val(response.boss);
+                $('#person_phone').val(response.phone);
+                $('#person_imsi').val(response.imsi);
+                $('#person_info').val(response.info);
+                $('#person_id').val(personId);
+
+                $('#editPersonModal').modal('show');
+            });
+    }
 </script>
 
 <script>

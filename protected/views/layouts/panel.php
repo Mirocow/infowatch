@@ -2,6 +2,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta name="language" content="en">
     <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/fw/bootstrap/css/bootstrap.min.css">
@@ -58,6 +60,12 @@
             <div class="link text-center">
                 <i class="fa fa-cogs"></i>
                 <div class="link-desc">Управление</div>
+            </div>
+        </a>
+        <a href="<?=$this->createUrl('/panel/logs');?>" <?= $this->active == 'logs' ? 'class="selected"' : ''?>>
+            <div class="link text-center">
+                <i class="fa fa-book"></i>
+                <div class="link-desc">Журнал событий</div>
             </div>
         </a>
         <div class="endblack"></div>

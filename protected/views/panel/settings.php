@@ -31,7 +31,7 @@
                     <i class="fa fa-volume-up"></i> Настройки VoIP
                 </a>
             </li>
-            <li class="link-container">
+            <!--<li class="link-container">
                 <a href="#gsm" data-toggle="tab">
                     <i class="fa fa-wifi"></i> Настройки GSM
                 </a>
@@ -40,7 +40,7 @@
                 <a href="#state" data-toggle="tab">
                     <i class="fa fa-heart"></i> Состояние системы
                 </a>
-            </li>
+            </li>-->
         </ul>
     </div>
     <div class="col-md-10 settings-tab-contents">
@@ -136,10 +136,10 @@
                     </tr>
                     </thead>
                     <tbody>
-                        <?php foreach($operators as $operator): ?>
+                        <?php foreach($operators as $index=>$operator): ?>
                             <tr class="operator-row" operator-id="<?=$operator->id?>">
                                 <td>
-                                    <?=$operator->id;?>
+                                    <?=$index+1;?>
                                 </td>
                                 <td>
                                     <?=$operator->name;?>
@@ -160,8 +160,7 @@
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-            </div>
-            <div class="tab-pane fade" id="gsm"><section>
+                <section>
                     <div class="settings--wrapper">
                         <h2 class="settings--header">Настройки GSM</h2>
                         <p class="settings--header-subtitle">Настройка параметров GSM сети.</p>
@@ -188,6 +187,9 @@
                         <div class="settings--wrap" id="server_settings"></div>
                     </div>
                 </section>
+            </div>
+            <div class="tab-pane fade" id="gsm">
+
             </div>
             <div class="tab-pane fade" id="voip"><section>
                     <div class="settings--wrapper">
@@ -224,55 +226,7 @@
                 </section>
             </div>
             <div class="tab-pane fade" id="state">
-                <div class="settings--wrapper">
-                    <h2 class="settings--header">Статус</h2>
-                    <p class="settings--header-subtitle">Отображение статуса и лога устройства.</p>
-                    <div class="settings--aside">
-                        <center>
-                        <table border="0px" style="background-color: transparent; margin-bottom: 35px;">
-                            <tbody><tr>
-                                <td width="200px">
-                                    Статус системы:
-                                </td>
-                                <td>
-                                <input type="checkbox" id="status-enable" value=""></td>
-                            </tr>
-                            </tbody></table>
 
-
-                        <input class="btn btn-primary" style="width: 219px" type="button" value="Сохранить" onclick="saveSystem();"></center>
-                    </div>
-                    <center>
-                        <table cellpadding="0" cellspacing="0" border="0" class="table table-bordered table-striped" id="operators" width="100%" style="margin-top: 10px;">
-                            <thead>
-                            <tr>
-                                <th>Время</th>
-                                <th>От</th>
-                                <th>Кому</th>
-                                <th>Описание</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <?php foreach(Log::model()->findAll() as $log): ?>
-                                <tr>
-                                    <td class="col-md-2">
-                                        <?=$log->happened;?>
-                                    </td>
-                                    <td>
-                                        <?=$log->from;?>
-                                    </td>
-                                    <td>
-                                        <?=$log->to;?>
-                                    </td>
-                                    <td>
-                                        <?=$log->details;?>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </center>
-                </div>
             </div>
         </div>
     </div>

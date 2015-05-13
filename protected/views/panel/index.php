@@ -57,14 +57,25 @@
             <table class="table table-striped table-hover uknown-devices">
                 <thead>
                 <tr>
+                    <th>Производитель</th>
                     <th>Устройство</th>
+                    <th>ФИО</th>
+                    <th>Страна</th>
+                    <th>Оператор</th>
+                    <th>Телефонный номер</th>
                     <th>Дата</th>
                 </tr>
                 </thead>
                 <tbody>
                 <?php foreach($unknownDevices as $device): ?>
                     <tr class="unknown-device" imsi="<?=$device->imsi?>">
+                        <td><?=$device->getManufacturer();?></td>
                         <td><?=$device->getDeviceName();?></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                         <td><?=date('Y-m-d H:i:s',$device->created);?></td>
                     </tr>
                 <?php endforeach; ?>

@@ -77,6 +77,11 @@ class PanelController extends Controller {
         $this->render('settings', compact('operators', 'voip', 'gsm', 'system', 'network'));
     }
 
+    public function actionLogs()
+    {
+        $this->render('logs');
+    }
+
     public function actionJs()
     {
         echo json_encode(['hostname' => 'example.com', 'ip' => '192.168.1.113', 'mask' => '255.255.255.0', 'gateway' => '192.168.1.1', 'dns' => '192.168.1.1']);
