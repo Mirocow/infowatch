@@ -182,19 +182,19 @@
                         <div class="form-group">
                             <?php echo $form->labelEx($group,'voice', ['class' => 'col-md-3 control-label']); ?>
                             <div class="col-md-9">
-                                <?php echo $form->checkBox($group,'voice', ['class' => 'form-control', 'id' => 'group_voice']); ?>
+                                <?php echo $form->checkBox($group,'voice', ['id' => 'group_voice']); ?>
                             </div>
                         </div>
                         <div class="form-group">
                             <?php echo $form->labelEx($group,'sms', ['class' => 'col-md-3 control-label']); ?>
                             <div class="col-md-9">
-                                <?php echo $form->checkBox($group,'sms', ['class' => 'form-control', 'id' => 'group_sms']); ?>
+                                <?php echo $form->checkBox($group,'sms', ['id' => 'group_sms']); ?>
                             </div>
                         </div>
                         <div class="form-group">
                             <?php echo $form->labelEx($group,'greet', ['class' => 'col-md-3 control-label']); ?>
                             <div class="col-md-9">
-                                <?php echo $form->checkBox($group,'greet', ['class' => 'form-control', 'id' => 'group_greet']); ?>
+                                <?php echo $form->checkBox($group,'greet', ['id' => 'group_greet']); ?>
                             </div>
                         </div>
                         <div class="form-group">
