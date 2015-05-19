@@ -54,12 +54,12 @@ class Operator extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'name' => 'Name',
-			'mcc' => 'Mcc',
-			'mnc' => 'Mnc',
-			'arfcn' => 'Arfcn',
-			'status' => 'Status',
+			'id' => '№',
+			'name' => 'Название',
+			'mcc' => 'MCC',
+			'mnc' => 'MNC',
+			'arfcn' => 'ARFCN',
+			'status' => 'Статус',
 		);
 	}
 

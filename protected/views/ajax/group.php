@@ -56,6 +56,7 @@
     <table class="table persons-table table-hover">
         <thead>
         <tr>
+            <th class="checkbox-td"><input type="checkbox" class="check-all-persons"/></th>
             <th>ФИО</th>
             <th>Должность</th>
             <th>Отдел</th>
@@ -66,6 +67,7 @@
         <tbody>
         <?php foreach($group->people as $person): ?>
             <tr class="person-row" person-id="<?=$person->id;?>">
+                <td class="checkbox-td"><input type="checkbox" class="person-checkbox" person-id="<?=$person->id?>"/>   </td>
                 <td><?=$person->name;?></td>
                 <td><?=$person->job;?></td>
                 <td><?=$person->department;?></td>

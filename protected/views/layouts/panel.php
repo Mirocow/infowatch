@@ -48,6 +48,12 @@
                 <div class="link-desc">Онлайн</div>
             </div>
         </a>
+        <a href="<?=$this->createUrl('/panel/unknown');?>" <?= $this->active == 'unknown' ? 'class="selected"' : ''?>>
+            <div class="link text-center">
+                <i class="fa fa-area-chart"></i>
+                <div class="link-desc">Неизвестные</div>
+            </div>
+        </a>
         <div class="heading text-center">Контроль</div>
         <a href="<?=$this->createUrl('/panel/persons');?>" <?= $this->active == 'persons' ? 'class="selected"' : ''?>>
             <div class="link text-center">

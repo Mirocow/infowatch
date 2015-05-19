@@ -16,6 +16,7 @@
     var personId = null;
     var groupId = null;
 </script>
+
 <div class="content col-md-11">
     <div class="row">
         <nav class="breadcrumbs">
@@ -24,22 +25,19 @@
     </div>
     <div class="col-md-4">
         <div class="row">
+            <div class="col-md-12 text-center form-group">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-default" id="add-group-btn"><i class="fa fa-plus"></i></button>
+                    <button type="button" class="btn btn-default" id="edit-group-btn"><i class="fa fa-pencil-square-o"></i></button>
+                    <button type="button" class="btn btn-default" id="remove-group-btn"><i class="fa fa-close"></i></button>
+                </div>
+            </div>
             <div class="col-md-12">
                 <div id="jstree">
                     <ul>
                         <li id="root" data-jstree='{"type":"root"}'>Группы
-                            <ul><?=$tree?>
-                                <!--
-                                <?php /*foreach($persons as $group): */?>
-                                    <li data-jstree='{"type":"group"}' group_id="<?/*=$group['group']->id;*/?>"><?/*=$group['group']->name;*/?>
-                                        <ul>
-                                            <?php /*foreach($group['persons'] as $person): */?>
-                                                <li data-jstree='{"type":"person"}' person_id="<?/*=$person->id;*/?>"><?/*=$person->name;*/?></li>
-                                            <?php /*endforeach;*/?>
-                                        </ul>
-                                    </li>
-                                <?php /*endforeach;*/?>
-                                </li>-->
+                            <ul>
+                                <?=$tree?>
                             </ul>
                         </li>
                     </ul>
@@ -48,23 +46,17 @@
         </div>
     </div>
     <div class="col-md-8 main-persons">
-
-        <div class="col-md-12" id="person-buttons" style="margin-bottom: 20px; display: none;">
-            <button type="button" class="btn btn-default add-person"><i class="fa fa-plus"></i> Добавить пользователя</button>
-            <button type="button" class="btn btn-default add-group"><i class="fa fa-plus"></i> Добавить группу</button>
-            <button type="button" class="btn btn-default" id="edit-person" disabled="disabled"><i class="glyphicon glyphicon-pencil"></i> Изменить</button>
-        </div>
-        <div class="col-md-12" id="group-buttons" style="margin-bottom: 20px; display: none;">
-            <button type="button" class="btn btn-default add-person"><i class="fa fa-plus"></i> Добавить пользователя</button>
-            <button type="button" class="btn btn-default add-group"><i class="fa fa-plus"></i> Добавить группу</button>
-            <button type="button" class="btn btn-default" id="edit-group" disabled="disabled"><i class="glyphicon glyphicon-pencil"></i> Изменить</button>
+        <div class="col-md-12 text-center">
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-default" id="add-person-btn"><i class="fa fa-plus"></i></button>
+                <button type="button" class="btn btn-default" id="remove-person-btn"><i class="fa fa-close"></i></button>
+            </div>
         </div>
         <div class="col-md-12" id="details">
 
         </div>
     </div>
     <div class="col-md-8" style="display: none;">
-
         <table class="table persons-table">
             <thead>
             <tr>
@@ -155,7 +147,6 @@
                         <?php echo $form->textArea($person,'id', ['class' => 'form-control', 'style' => 'display: none;', 'id' => 'person_id']); ?>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger pull-left" id="remove-person" disabled="disabled"><i class="glyphicon glyphicon-remove"></i> Удалить</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
                         <button type="button" class="btn btn-primary" id="save-person">Сохранить</button>
                     </div>
@@ -215,7 +206,6 @@
                         <?php echo $form->textArea($group,'id', ['class' => 'form-control', 'style' => 'display: none;', 'id' => 'group_id']); ?>
                     </div>
                     <div class="modal-footer">
-<!--                        <button type="button" class="btn btn-danger pull-left" id="remove-group" disabled="disabled"><i class="glyphicon glyphicon-remove"></i> Удалить</button>-->
                         <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
                         <button type="button" class="btn btn-primary" id="save-group">Сохранить</button>
                     </div>
@@ -225,32 +215,14 @@
     </div>
 </div>
 <script>
+    $('#add-group-btn').click(function(e){
+        var instance = $('#jstree').jstree(true);
+        var parentNode = instance.get_node(instance.get_selected(true)[0]);
 
-    $(document).on('click', '.add-person', function(e){
-        $.post(
-            Yii.app.createUrl('/ajax/createPerson'),
-            {
-                groupId: null
-            }
-        ).done(function(response)
-            {
-                response = JSON.parse(response);
-
-                $node = $('#jstree').jstree(true).create_node('root', {
-                    "li_attr": {
-                        "type": "user",
-                        "parent": null,
-                        "person_id": response.id
-                    }
-                });
-
-                $('#jstree').jstree(true).set_text($node, "Новый пользователь");
-                $('#jstree').jstree(true).set_type($node, "person");
-                $('#jstree').jstree(true).edit($node);
-            });
-    });
-    $(document).on('click', '.add-group', function(e){
         var parent = null;
+        if(parentNode.type == 'group')
+            parent = parentNode.li_attr.group_id;
+
         $.post(
             Yii.app.createUrl('/ajax/createGroup'),
             {
@@ -262,7 +234,7 @@
                 response = JSON.parse(response);
 
 
-                $node = $('#jstree').jstree(true).create_node('root' /*$node*/, {
+                $node = $('#jstree').jstree(true).create_node(parentNode, {
                     "li_attr": {
                         "type": "group",
                         "parent": parent,
@@ -274,78 +246,133 @@
                 $('#jstree').jstree(true).edit($node);
             });
     });
+    $('#edit-group-btn').click(function(){
+        $.post(
+            Yii.app.createUrl('/ajax/getGroup'),
+            {
+                id: groupId
+            }
+        ).done(function (response) {
+                response = JSON.parse(response);
+
+                $('#group_name').val(response.name);
+                $('#group_greet_message').val(response.greet_message);
+
+                if(response.voice == '1')
+                {
+                    $('#group_voice').attr('checked', 'checked');
+                }
+                else
+                {
+                    $('#group_voice').removeAttr('checked');
+                }
+
+                if(response.sms == '1')
+                {
+                    $('#group_sms').attr('checked', 'checked');
+                }
+                else
+                {
+                    $('#group_sms').removeAttr('checked');
+                }
+
+                if(response.greet == '1')
+                {
+                    $('#group_greet').attr('checked', 'checked');
+                }
+                else
+                {
+                    $('#group_greet').removeAttr('checked');
+                }
+
+                $('#group_id').val(groupId);
+
+                $('#editGroupModal').modal('show');
+            });
+    });
+    $('#remove-group-btn').click(function(){
+        var tree = $('#jstree').jstree(true);
+        $node = tree.get_selected()[0];
+        if ($node != "root") {
+            tree.delete_node($node);
+        } else {
+            alert("Вы не можете удалить корневую папку!");
+        }
+    });
+    $('#add-person-btn').click(function(){
+        var instance = $('#jstree').jstree(true);
+        var parentNode = instance.get_node(instance.get_selected(true)[0]);
+
+        var parent = null;
+        if(parentNode.type == 'group')
+            parent = parentNode.li_attr.group_id;
+
+        $.post(
+            Yii.app.createUrl('/ajax/createPerson'),
+            {
+                groupId: parent
+            }
+        ).done(function(response)
+            {
+                response = JSON.parse(response);
+
+                showUserForm(response.id);
+            });
+    });
+    $(document).on('change', '.check-all-persons', function(e){
+        if($(this).prop('checked'))
+        {
+            $('.person-checkbox').each(function(index, checkbox){
+                $(checkbox).prop('checked', true);
+            });
+        }
+        else {
+            $('.person-checkbox').each(function(index, checkbox){
+                $(checkbox).prop('checked', false);
+            });
+        }
+    });
+
+    $(document).on('click', '.person-checkbox', function(e) {
+        e.stopPropagation();
+    });
+    $(document).on('change', '.person-checkbox', function(e){
+        e.stopPropagation();
+
+        if($('.check-all-persons').prop('checked'))
+            $('.check-all-persons').prop('checked', false);
+
+    });
     $(document).on('click', '.person-row', function(e){
         var id = $(this).attr('person-id');
+        $('.check-all-persons').prop('checked', false);
+        $('.person-checkbox').each(function(index, checkbox){
+            $(checkbox).prop('checked', false);
+        });
         showUserForm(id);
-        /*drawUser(id);
-        $('#jstree')
-            .jstree('deselect_all').jstree('select_node', 'p' + id);*/
     });
     $(document).ready(function(){
-        $('#remove-person').click(function(){
+        $('#remove-person-btn').click(function(){
 
             var url = Yii.app.createUrl('/ajax/deletePerson');
-
-
+            var ids = [];
+            var checkedCheckboxes = $('.person-checkbox:checked');
+            $(checkedCheckboxes).each(function(index, checkbox){
+                ids.push($(checkbox).attr('person-id'));
+            });
             $.post(
                 url,
                 {
-                    id:  personId
+                    id:  JSON.stringify(ids)
                 }
             ).done(function(response){
-                    var instance = $('#jstree').jstree(true);
-                    instance.delete_node(instance.get_selected());
-                    $('#editPersonModal').modal('hide');
-                    $('#details').html('');
-                    $('#edit-person').attr('disabled', 'disabled');
+                $(checkedCheckboxes).each(function(index, checkbox) {
+                    $(checkbox).parent().parent().remove();
                 });
+            });
         });
         $('#edit-person').click(function(){
             showUserForm(personId);
-        });
-        $('#edit-group').click(function(){
-            $.post(
-                Yii.app.createUrl('/ajax/getGroup'),
-                {
-                    id: groupId
-                }
-            ).done(function (response) {
-                    response = JSON.parse(response);
-
-                    $('#group_name').val(response.name);
-                    $('#group_greet_message').val(response.greet_message);
-
-                    if(response.voice == '1')
-                    {
-                        $('#group_voice').attr('checked', 'checked');
-                    }
-                    else
-                    {
-                        $('#group_voice').removeAttr('checked');
-                    }
-
-                    if(response.sms == '1')
-                    {
-                        $('#group_sms').attr('checked', 'checked');
-                    }
-                    else
-                    {
-                        $('#group_sms').removeAttr('checked');
-                    }
-
-                    if(response.greet == '1')
-                    {
-                        $('#group_greet').attr('checked', 'checked');
-                    }
-                    else
-                    {
-                        $('#group_greet').removeAttr('checked');
-                    }
-
-                    $('#group_id').val(groupId);
-
-                    $('#editGroupModal').modal('show');
-                });
         });
         $('#save-person').click(function(){
             var form = new FormData($('#edit-person-form')[0]);
@@ -360,8 +387,9 @@
             });
             request.done(function(response) {
                 response = JSON.parse(response);
-                drawUser(response.id);
-                $('#jstree li[person_id=' + response.id + '] a').html('<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image: url(<?=Yii::app()->request->baseUrl?>/img/user.png); background-size: auto; background-position: 50% 50%;"></i>' + response.name);
+                drawGroup(response.group_id);
+                //drawUser(response.id);
+                //$('#jstree li[person_id=' + response.id + '] a').html('<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image: url(<?=Yii::app()->request->baseUrl?>/img/user.png); background-size: auto; background-position: 50% 50%;"></i>' + response.name);
                 $('#editPersonModal').modal('hide');
             });
         });
@@ -415,7 +443,7 @@
                 $('#person_phone').val(response.phone);
                 $('#person_imsi').val(response.imsi);
                 $('#person_info').val(response.info);
-                $('#person_id').val(personId);
+                $('#person_id').val(uid);
 
                 $('#editPersonModal').modal('show');
             });

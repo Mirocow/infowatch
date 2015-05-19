@@ -7,7 +7,6 @@
  */
 
 /* @var $unknownDevices Device[]*/
-/* @var $knownDevices Device[]*/
 ?>
 
 
@@ -17,35 +16,38 @@
             Мониторинг
         </nav>
     </div>
-    <table class="table table-striped">
+    <button class="btn btn-success" disabled="disabled" id="register-user"><i class="fa fa-plus"></i> Зарегистрировать</button>
+    <table class="table table-striped table-hover uknown-devices">
         <thead>
         <tr>
+            <th>ID</th>
+            <th>Производитель</th>
+            <th>Устройство</th>
             <th>ФИО</th>
             <th>Страна</th>
             <th>Оператор</th>
-            <th>Группа</th>
-            <th>IMEI</th>
-            <th>IMSI</th>
-            <th>Номер телефона</th>
+            <th>Телефонный номер</th>
             <th>Дата</th>
         </tr>
         </thead>
         <tbody>
-        <?php foreach($knownDevices as $device): ?>
-            <tr>
-                <td><?=$device->person->name;?></td>
-                <td><?=$device->person->getCountry();?></td>
-                <td><?=$device->getOperator();?></td>
-                <td><?=$device->person->getGroup();?></td>
-                <td><?=$device->imei;?></td>
-                <td><?=$device->imsi;?></td>
-                <td><?=$device->person->phone;?></td>
+        <?php foreach($unknownDevices as $device): ?>
+            <tr class="unknown-device" imsi="<?=$device->imsi?>">
+                <td><?=$device->id?></td>
+                <td><?=$device->getManufacturer();?></td>
+                <td><?=$device->getDeviceName();?></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
                 <td><?=date('Y-m-d H:i:s',$device->created);?></td>
             </tr>
         <?php endforeach; ?>
         </tbody>
     </table>
 </div>
+
 <div class="modal fade" id="registerPersonModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

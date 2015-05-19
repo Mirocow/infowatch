@@ -207,13 +207,13 @@
                                 <tr>
                                     <th>Пароль</th>
                                     <td>
-                                        <input type="text" maxlength="15" class="input" size="15" id="voip_password" name="gsm_power" value="<?=$voip['password'];?>">
+                                        <input type="password" maxlength="15" class="input" size="15" id="voip_password" name="gsm_power" value="<?=$voip['password'];?>">
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>Пароль</th>
+                                    <th>Повтор пароля</th>
                                     <td>
-                                        <input type="text" maxlength="15" class="input" disabled size="15" id="voip_operator" name="gsm_operator" value="MTS">
+                                        <input type="password" maxlength="15" class="input" size="15" id="voip_operator" name="gsm_operator" value="<?=$voip['password'];?>">
                                     </td>
                                 </tr>
                                 </tbody></table>
@@ -400,6 +400,11 @@
                 }
             ).done(function(response){
                     $('.operators-table tbody tr.active').remove();
+                    var i = 1;
+                    $('.operators-table tbody tr').each(function(index, row){
+                        $(row).find('td:first').text(i);
+                        i++;
+                    });
                     $('#remove-operator').attr('disabled', 'disabled');
                 });
         });

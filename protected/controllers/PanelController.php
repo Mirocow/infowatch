@@ -13,16 +13,23 @@ class PanelController extends Controller {
 
     public function actionIndex()
     {
-        $unknownDevices = Device::model()->findAll([
-            'condition' => 'created >= UNIX_TIMESTAMP() - 5*60 AND person_id IS NULL', // 5 mins
-        ]);
-
         $knownDevices = Device::model()->findAll([
             'condition' => 'created >= UNIX_TIMESTAMP() - 5*60 AND person_id IS NOT NULL', // 5 mins
         ]);
 
         $this->active = 'index';
-        $this->render('index', compact('unknownDevices', 'knownDevices'));
+        $this->render('index', compact('knownDevices'));
+    }
+
+    public function actionUnknown()
+    {
+
+        $unknownDevices = Device::model()->findAll([
+            'condition' => 'created >= UNIX_TIMESTAMP() - 5*60 AND person_id IS NULL', // 5 mins
+        ]);
+
+        $this->active = 'unknown';
+        $this->render('unknown', compact('unknownDevices'));
     }
 
     public function actionPersons()
@@ -33,10 +40,10 @@ class PanelController extends Controller {
 
         $tree = $this->displayTree($groups);
 
-        foreach(Person::model()->findAllByAttributes(['group_id' => null]) as $person)
+        /*foreach(Person::model()->findAllByAttributes(['group_id' => null]) as $person)
         {
             $tree .= '<li data-jstree=\'{"type":"person"}\' id="p'.$person->id.'" person_id="'.$person->id.'">'.$person->name.'</li>';
-        }
+        }*/
         
         $allPersons = Person::model()->findAll();
 
@@ -53,10 +60,10 @@ class PanelController extends Controller {
             if((Group::model()->countByAttributes(['parent_id' => $group->id]) + Person::model()->countByAttributes(['group_id' => $group->id])) > 0)
             {
                 $return .= '<ul>';
-                foreach(Person::model()->findAllByAttributes(['group_id' => $group->id]) as $person)
+                /*foreach(Person::model()->findAllByAttributes(['group_id' => $group->id]) as $person)
                 {
                     $return .= '<li data-jstree=\'{"type":"person"}\' id="p'.$person->id.'" person_id="'.$person->id.'">'.$person->name.'</li>';
-                }
+                }*/
                 $return .= $this->displayTree(Group::model()->findAllByAttributes(['parent_id' => $group->id]));
                 $return .= '</ul>';
             }
@@ -79,6 +86,7 @@ class PanelController extends Controller {
 
     public function actionLogs()
     {
+        $this->active = 'logs';
         $this->render('logs');
     }
 

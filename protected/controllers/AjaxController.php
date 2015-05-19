@@ -17,7 +17,8 @@ class AjaxController extends Controller
             $person->group_id = $_POST['groupId'];
             $person->save();
 
-            echo json_encode(['id' => $person->getPrimaryKey()]);
+            //echo json_encode(['id' => $person->getPrimaryKey()]);
+            echo json_encode($person->attributes);
         }
     }
     public function actionCreateGroup()
@@ -64,7 +65,10 @@ class AjaxController extends Controller
     {
         if(isset($_POST['id']))
         {
-            Person::model()->deleteByPk($_POST['id']);
+            $ids = json_decode($_POST['id']);
+            $criteria = new CDbCriteria();
+            $criteria->addInCondition('id', $ids);
+            Person::model()->deleteAll($criteria);
         }
     }
     public function actionDeleteGroup()
