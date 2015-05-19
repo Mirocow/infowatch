@@ -75,7 +75,13 @@ class AjaxController extends Controller
     {
         if(isset($_POST['id']))
         {
-            Group::model()->deleteByPk($_POST['id']);
+            $group = Group::model()->findByPk($_POST['id']);
+            if($group)
+            {
+                Person::model()->updateAll(['group_id' => null], 'group_id = ' . $_POST['id']);
+                Group::model()->updateAll(['parent_id' => $group->parent_id], 'parent_id = ' . $_POST['id']);
+                Group::model()->deleteByPk($_POST['id']);
+            }
         }
     }
     public function actionDeleteOperator()
@@ -210,13 +216,25 @@ class AjaxController extends Controller
     {
         if(isset($_POST['id']))
         {
-            $group = Group::model()->findByPk($_POST['id']);
-
-            if($group)
+            if($_POST['id'])
             {
-                $response = ['content' => $this->renderPartial('group', compact('group'), true), 'group' => $group->attributes];
+                $group = Group::model()->findByPk($_POST['id']);
+                if($group)
+                {
+                    $response = ['content' => $this->renderPartial('group', compact('group'), true), 'group' => $group->attributes];
+                    echo json_encode($response);
+                }
+            }
+            else {
+                $criteria = new CDbCriteria();
+                $criteria->condition = 'group_id IS NULL';
+
+                $persons = Person::model()->findAll($criteria);
+
+                $response = ['content' => $this->renderPartial('without_group', compact('persons'), true)];
                 echo json_encode($response);
             }
+
         }
     }
     public function actionSaveSetting()

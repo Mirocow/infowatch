@@ -25,7 +25,7 @@
     </div>
     <div class="col-md-4">
         <div class="row">
-            <div class="col-md-12 text-center form-group">
+            <div class="col-md-12 form-group">
                 <div class="btn-group" role="group">
                     <button type="button" class="btn btn-default" id="add-group-btn"><i class="fa fa-plus"></i></button>
                     <button type="button" class="btn btn-default" id="edit-group-btn"><i class="fa fa-pencil-square-o"></i></button>
@@ -46,7 +46,7 @@
         </div>
     </div>
     <div class="col-md-8 main-persons">
-        <div class="col-md-12 text-center">
+        <div class="col-md-12">
             <div class="btn-group" role="group">
                 <button type="button" class="btn btn-default" id="add-person-btn"><i class="fa fa-plus"></i></button>
                 <button type="button" class="btn btn-default" id="remove-person-btn"><i class="fa fa-close"></i></button>
@@ -135,7 +135,7 @@
                         <div class="form-group">
                             <?php echo $form->labelEx($person,'imsi', ['class' => 'col-md-3 control-label']); ?>
                             <div class="col-md-9">
-                                <?php echo $form->textField($person,'imsi', ['class' => 'form-control', 'id' => 'person_imsi']); ?>
+                                <?php echo $form->textField($person,'imsi', ['class' => 'form-control', 'id' => 'person_imsi', 'disabled' => 'disabled']); ?>
                             </div>
                         </div>
                         <div class="form-group">
@@ -292,9 +292,21 @@
     });
     $('#remove-group-btn').click(function(){
         var tree = $('#jstree').jstree(true);
+
         $node = tree.get_selected()[0];
+        $parent = tree.get_parent($node);
+
         if ($node != "root") {
+            var children = tree.get_children_dom($node);
+
+            for(var i = 0; i < children.length; i++)
+            {
+                console.log(children[i].id);
+                tree.move_node(children[i].id, $parent);
+            }
             tree.delete_node($node);
+            tree.select_node($parent);
+
         } else {
             alert("Вы не можете удалить корневую папку!");
         }
@@ -483,13 +495,17 @@
             response = JSON.parse(response);
 
             $('#details').html(response.content);
-
+            if(typeof response.group == 'undefined')
+            {
+                $('#edit-group-btn').prop('disabled', true);
+                $('#remove-group-btn').prop('disabled', true);
+            }
+            else {
+                $('#edit-group-btn').prop('disabled', false);
+                $('#remove-group-btn').prop('disabled', false);
+            }
             type = 'group';
             $('#edit-group').removeAttr('disabled');
-            //$('#remove-group').removeAttr('disabled');
-
-            $('#group-buttons').show();
-            $('#person-buttons').hide();
         });
     }
     function demo_create() {
@@ -534,6 +550,10 @@
             if(target.node.type == 'group')
             {
                 drawGroup(target.node.li_attr.group_id);
+            }
+            if(target.node.type == 'root')
+            {
+                drawGroup(null);
             }
         })
         .on('move_node.jstree', function(e, target){
@@ -629,7 +649,7 @@
                         // in case of 'rename_node' node_position is filled with the new node name
 
                         if (operation === "move_node") {
-                            return ((node.type === "person" && node_parent.type === "group")); //only allow dropping inside nodes of type 'Parent'
+                            return ((node_parent.type === "group" || node_parent.type === "root")); //only allow dropping inside nodes of type 'Parent'
                         }
                         return true;  //allow all other operations
                     }
