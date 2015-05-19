@@ -253,33 +253,34 @@
                 <div class="form-group">
                     <?php echo $form->labelEx($operator,'name', ['class' => 'col-md-3 control-label']); ?>
                     <div class="col-md-9">
-                        <?php echo $form->textField($operator,'name', ['class' => 'form-control', 'id' => 'person_name']); ?>
+                        <?= $form->dropDownList($operator, 'name', CHtml::listData(Mnc::model()->findAll(), 'id', 'operator'), ['class' => 'combobox form-control']); ?>
+                        <?php //echo $form->textField($operator,'name', ['class' => 'form-control', 'id' => 'operator_name']); ?>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <?php echo $form->labelEx($operator,'mcc', ['class' => 'col-md-3 control-label']); ?>
                     <div class="col-md-9">
-                        <?php echo $form->textField($operator,'mcc', ['class' => 'form-control', 'id' => 'person_job']); ?>
+                        <?php echo $form->textField($operator,'mcc', ['class' => 'form-control', 'id' => 'new_operator_mcc']); ?>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <?php echo $form->labelEx($operator,'mnc', ['class' => 'col-md-3 control-label']); ?>
                     <div class="col-md-9">
-                        <?php echo $form->textField($operator,'mnc', ['class' => 'form-control', 'id' => 'person_department']); ?>
+                        <?php echo $form->textField($operator,'mnc', ['class' => 'form-control', 'id' => 'new_operator_mnc']); ?>
                     </div>
                 </div>
                 <div class="form-group">
                     <?php echo $form->labelEx($operator,'arfcn', ['class' => 'col-md-3 control-label']); ?>
                     <div class="col-md-9">
-                        <?php echo $form->textField($operator,'arfcn', ['class' => 'form-control', 'id' => 'person_boss']); ?>
+                        <?php echo $form->textField($operator,'arfcn', ['class' => 'form-control', 'id' => 'new_operator_arcfn']); ?>
                     </div>
                 </div>
                 <div class="form-group">
                     <?php echo $form->labelEx($operator,'status', ['class' => 'col-md-3 control-label']); ?>
                     <div class="col-md-9">
-                        <?php echo $form->dropDownList($operator,'status', [1 => 'Online', 0 => 'Offline'], ['class' => 'form-control', 'id' => 'person_boss']); ?>
+                        <?php echo $form->dropDownList($operator,'status', [1 => 'Online', 0 => 'Offline'], ['class' => 'form-control', 'id' => 'new_operator_status']); ?>
                     </div>
                 </div>
             </div>
@@ -318,14 +319,14 @@
                 <div class="form-group">
                     <?php echo $form->labelEx($operator,'mcc', ['class' => 'col-md-3 control-label']); ?>
                     <div class="col-md-9">
-                        <?php echo $form->textField($operator,'mcc', ['class' => 'form-control', 'id' => 'operator_mcc']); ?>
+                        <?php echo $form->textField($operator,'mcc', ['class' => 'form-control', 'id' => 'operator_mcc', 'disabled' => 'disabled']); ?>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <?php echo $form->labelEx($operator,'mnc', ['class' => 'col-md-3 control-label']); ?>
                     <div class="col-md-9">
-                        <?php echo $form->textField($operator,'mnc', ['class' => 'form-control', 'id' => 'operator_mnc']); ?>
+                        <?php echo $form->textField($operator,'mnc', ['class' => 'form-control', 'id' => 'operator_mnc', 'disabled' => 'disabled']); ?>
                     </div>
                 </div>
                 <div class="form-group">
@@ -351,7 +352,6 @@
     </div>
 </div>
 <script>
-
     $(document).on('click', '.operator-row', function(e){
         $(this).parent().find('.operator-row').removeClass('active');
         $(this).addClass('active');
@@ -360,8 +360,23 @@
         $('#remove-operator').removeAttr('disabled');
 
     });
+    $(document).on('click', '.combobox-selected .input-group .dropdown-toggle', function(){
+    });
 //
+    $(document).on('click', '.typeahead li', function(e){
+        var id = $('#Operator_name option:selected').val();
+
+        $.get(
+            Yii.app.createUrl('/ajax/getMnc', {id: id})
+        ).done(function(operator) {
+                operator = JSON.parse(operator);
+                $('#new_operator_mnc').val(operator.mnc).attr('disabled', 'disabled');
+                $('#new_operator_mcc').val(operator.mcc).attr('disabled', 'disabled');
+        })
+    });
+
     $(document).ready(function(){
+        $('.combobox').combobox();
         $('#addOperator').click(function(){
             $('#operator-form input').val('');
             $('#operatorModal').modal('show');

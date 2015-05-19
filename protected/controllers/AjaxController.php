@@ -139,6 +139,15 @@ class AjaxController extends Controller
                 echo json_encode($operator->attributes);
         }
     }
+    public function actionGetMnc()
+    {
+        if(isset($_GET['id']))
+        {
+            $mnc = Mnc::model()->findByAttributes(['id' => $_GET['id']]);
+            if($mnc)
+                echo json_encode($mnc->attributes);
+        }
+    }
     public function actionSavePerson()
     {
         if(isset($_POST['Person']))

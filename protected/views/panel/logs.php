@@ -39,6 +39,7 @@
                         <th>От</th>
                         <th>Кому</th>
                         <th>Описание</th>
+                        <th>Файл</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -55,6 +56,9 @@
                             </td>
                             <td>
                                 <?=$log->details;?>
+                            </td>
+                            <td class="text-center">
+                                <?=$log->attachment ? CHtml::link('<i class="fa fa-download"></i>',Yii::app()->request->baseUrl.'/attachments/'.$log->attachment) : '';?>
                             </td>
                         </tr>
                     <?php endforeach; ?>

@@ -9,6 +9,7 @@
  * @property string $details
  * @property string $from
  * @property string $to
+ * @property string $attachment
  */
 class Log extends CActiveRecord
 {
@@ -29,10 +30,10 @@ class Log extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('happened, details', 'required'),
-			array('from, to', 'length', 'max'=>45),
+			array('from, to, attachment', 'length', 'max'=>45),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, happened, details, from, to', 'safe', 'on'=>'search'),
+			array('id, happened, details, from, to, attachment', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -58,6 +59,7 @@ class Log extends CActiveRecord
 			'details' => 'Details',
 			'from' => 'From',
 			'to' => 'To',
+			'attachment' => 'Attachment',
 		);
 	}
 
@@ -84,6 +86,7 @@ class Log extends CActiveRecord
 		$criteria->compare('details',$this->details,true);
 		$criteria->compare('from',$this->from,true);
 		$criteria->compare('to',$this->to,true);
+		$criteria->compare('attachment',$this->attachment,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
