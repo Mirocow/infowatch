@@ -90,6 +90,26 @@ class PanelController extends Controller {
         $this->render('logs');
     }
 
+    public function actionProfile()
+    {
+        $user = User::model()->findByPk(Yii::app()->user->getId());
+        if(isset($_POST['User']))
+        {
+            $user->attributes = $_POST['User'];
+            if($_POST['User']['passwordRepeat'] == $user->password && $user->validate())
+            {
+                $user->save();
+                Yii::app()->user->setFlash('SUCCESS', 'Пароль успешно изменен!');
+            }
+            else {
+                Yii::app()->user->setFlash('ERROR', 'Пароли не совпадают!');
+            }
+            $this->redirect(['/panel/profile']);
+        }
+
+        $this->render('profile', compact('user'));
+    }
+
     public function actionJs()
     {
         echo json_encode(['hostname' => 'example.com', 'ip' => '192.168.1.113', 'mask' => '255.255.255.0', 'gateway' => '192.168.1.1', 'dns' => '192.168.1.1']);

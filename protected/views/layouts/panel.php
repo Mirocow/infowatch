@@ -35,6 +35,7 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li style="color: white; padding-top: 14px; padding-right: 10px;">Онлайн: <span class="label label-success" style="bottom: 1px; position: relative;"><?=$this->countOnline()?></span></li>
+                    <li><a href="<?=$this->createUrl('/panel/profile');?>"><i class="fa fa-user"></i> Профиль</a></li>
                     <li><a href="<?=$this->createUrl('/site/logout');?>"><i class="fa fa-sign-out"></i> Выйти</a></li>
                 </ul>
             </div>
