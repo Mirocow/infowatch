@@ -53,7 +53,7 @@
         </a>
         <a href="<?=$this->createUrl('/panel/unknown');?>" <?= $this->active == 'unknown' ? 'class="selected"' : ''?>>
             <div class="link text-center">
-                <i class="fa fa-area-chart"></i>
+                <i class="fa fa-question"></i>
                 <div class="link-desc">Неизвестные</div>
             </div>
         </a>
