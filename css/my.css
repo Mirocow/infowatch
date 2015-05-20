@@ -154,3 +154,8 @@ nav.navbar .navbar-brand {
   position: relative;
   bottom: 3px;
 }
+.btn-sm {
+  padding: 0px 5px;
+  position: relative;
+  bottom: 4px;
+}

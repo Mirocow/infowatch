@@ -65,16 +65,19 @@
                 <th>Отдел</th>
                 <th>Руководитель</th>
                 <th>Номер телефона</th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
             <?php foreach($allPersons as $person): ?>
-                <tr class="person-row" person-id="<?=$person->id;?>">
+                <tr class="person-button" person-id="<?=$person->id;?>">
                     <td><?=$person->name;?></td>
                     <td><?=$person->job;?></td>
                     <td><?=$person->department;?></td>
                     <td><?=$person->boss;?></td>
                     <td><?=$person->phone;?></td>
+                    <td><?=$person->phone;?></td>
+                    <td><button type="button" class="btn btn-primary person-button"><i class="fa fa-pencil"></i></button></td>
                 </tr>
             <?php endforeach; ?>
             </tbody>
@@ -215,6 +218,12 @@
     </div>
 </div>
 <script>
+    $(document).on('click', '.person-row', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+
+        $(this).find('input:first').trigger('click');
+    });
     $('#add-group-btn').click(function(e){
         var instance = $('#jstree').jstree(true);
         var parentNode = instance.get_node(instance.get_selected(true)[0]);
@@ -226,7 +235,7 @@
         $.post(
             Yii.app.createUrl('/ajax/createGroup'),
             {
-                parent: parent,
+                parent: null,
                 name: 'Новая группа'
             }
         ).done(function(response)
@@ -234,10 +243,10 @@
                 response = JSON.parse(response);
 
 
-                $node = $('#jstree').jstree(true).create_node(parentNode, {
+                $node = $('#jstree').jstree(true).create_node('root', {
                     "li_attr": {
                         "type": "group",
-                        "parent": parent,
+                        "parent": 'root',
                         "group_id": response.id
                     }
                 });
@@ -355,7 +364,11 @@
             $('.check-all-persons').prop('checked', false);
 
     });
-    $(document).on('click', '.person-row', function(e){
+    $(document).on('click', '.person-button', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        e.cancelBubble = true;
+
         var id = $(this).attr('person-id');
         $('.check-all-persons').prop('checked', false);
         $('.person-checkbox').each(function(index, checkbox){
@@ -783,7 +796,7 @@
                     'check_while_dragging': true,
                     copy: false
                 },
-                "plugins" : [ "contextmenu", "dnd", "search", "state", "types", "wholerow", "crrm" ]
+                "plugins" : [ "contextmenu", "search", "state", "types", "wholerow", "crrm" ] //dnd
             });
     });
 </script>

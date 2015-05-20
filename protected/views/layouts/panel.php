@@ -65,12 +65,14 @@
             </div>
         </a>
         <div class="heading text-center">Настройки</div>
-        <a href="<?=$this->createUrl('/panel/settings');?>" <?= $this->active == 'settings' ? 'class="selected"' : ''?>>
-            <div class="link text-center">
-                <i class="fa fa-cogs"></i>
-                <div class="link-desc">Управление</div>
-            </div>
-        </a>
+        <?php if(Yii::app()->user->role == 'ADMIN'): ?>
+            <a href="<?=$this->createUrl('/panel/settings');?>" <?= $this->active == 'settings' ? 'class="selected"' : ''?>>
+                <div class="link text-center">
+                    <i class="fa fa-cogs"></i>
+                    <div class="link-desc">Управление</div>
+                </div>
+            </a>
+        <?php endif; ?>
         <a href="<?=$this->createUrl('/panel/logs');?>" <?= $this->active == 'logs' ? 'class="selected"' : ''?>>
             <div class="link text-center">
                 <i class="fa fa-book"></i>

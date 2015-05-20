@@ -19,6 +19,7 @@
             <th>Отдел</th>
             <th>Руководитель</th>
             <th>Номер телефона</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -30,6 +31,7 @@
                 <td><?=$person->department;?></td>
                 <td><?=$person->boss;?></td>
                 <td><?=$person->phone;?></td>
+                <td><button type="button" class="btn btn-sm btn-primary person-button" person-id="<?=$person->id;?>"><i class="fa fa-pencil"></i></button></td>
             </tr>
         <?php endforeach; ?>
         </tbody>
