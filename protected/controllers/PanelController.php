@@ -11,6 +11,13 @@ class PanelController extends Controller {
     public $layout = 'panel';
     public $active = 'index';
 
+    public function filters()
+    {
+        return array(
+            'isUser'  // указываем название метода фильтра БЕЗ префикса "filter"
+        );
+    }
+
     public function actionIndex()
     {
         $knownDevices = Device::model()->findAll([

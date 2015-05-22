@@ -28,4 +28,13 @@ class Controller extends CController
                 'condition' => 'created >= UNIX_TIMESTAMP() - 5*60 AND person_id IS NOT NULL', // 5 mins
             ]);
     }
+    public function filterIsUser($filterChain)
+    {
+        if(isset(Yii::app()->user->role) && !Yii::app()->user->isGuest)
+        {
+            $filterChain->run();
+        }
+        else
+            $this->redirect(array('/site/login'));
+    }
 }
