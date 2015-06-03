@@ -65,13 +65,21 @@
             </div>
         </a>
         <div class="heading text-center">Настройки</div>
-        <?php if(Yii::app()->user->role == 'ADMIN'): ?>
-            <a href="<?=$this->createUrl('/panel/settings');?>" <?= $this->active == 'settings' ? 'class="selected"' : ''?>>
-                <div class="link text-center">
-                    <i class="fa fa-cogs"></i>
-                    <div class="link-desc">Управление</div>
-                </div>
-            </a>
+        <?php if(isset(Yii::app()->user->role)): ?>
+            <?php if(Yii::app()->user->role == 'ADMIN'): ?>
+                <a href="<?=$this->createUrl('/panel/settings');?>" <?= $this->active == 'settings' ? 'class="selected"' : ''?>>
+                    <div class="link text-center">
+                        <i class="fa fa-cogs"></i>
+                        <div class="link-desc">Управление</div>
+                    </div>
+                </a>
+                <a href="<?=$this->createUrl('/panel/users');?>" <?= $this->active == 'users' ? 'class="selected"' : ''?>>
+                    <div class="link text-center">
+                        <i class="fa fa-users"></i>
+                        <div class="link-desc">Пользователи</div>
+                    </div>
+                </a>
+            <?php endif; ?>
         <?php endif; ?>
         <a href="<?=$this->createUrl('/panel/logs');?>" <?= $this->active == 'logs' ? 'class="selected"' : ''?>>
             <div class="link text-center">

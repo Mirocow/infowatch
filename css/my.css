@@ -159,3 +159,10 @@ nav.navbar .navbar-brand {
   position: relative;
   bottom: 4px;
 }
+table.users-table tbody tr td {
+  vertical-align: middle;
+}
+table.users-table tbody tr td button {
+  position: relative;
+  top: 1px;
+}

@@ -255,4 +255,11 @@ class AjaxController extends Controller
             }
         }
     }
+    public function actionDeleteUser($id) {
+        User::model()->deleteByPk($id);
+    }
+    public function actionUserChangeRole($id, $role)
+    {
+        User::model()->updateByPk($id, ['role' => $role]);
+    }
 }

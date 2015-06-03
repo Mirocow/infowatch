@@ -117,6 +117,12 @@ class PanelController extends Controller {
         $this->render('profile', compact('user'));
     }
 
+    public function actionUsers()
+    {
+        $users = User::model()->findAll();
+        $this->render('users', compact('users'));
+    }
+
     public function actionJs()
     {
         echo json_encode(['hostname' => 'example.com', 'ip' => '192.168.1.113', 'mask' => '255.255.255.0', 'gateway' => '192.168.1.1', 'dns' => '192.168.1.1']);

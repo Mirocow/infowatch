@@ -59,14 +59,14 @@
     <div class="col-md-8" style="display: none;">
         <table class="table persons-table">
             <thead>
-            <tr>
-                <th>ФИО</th>
-                <th>Должность</th>
-                <th>Отдел</th>
-                <th>Руководитель</th>
-                <th>Номер телефона</th>
-                <th></th>
-            </tr>
+                <tr>
+                    <th>ФИО</th>
+                    <th>Должность</th>
+                    <th>Отдел</th>
+                    <th>Руководитель</th>
+                    <th>Номер телефона</th>
+                    <th></th>
+                </tr>
             </thead>
             <tbody>
             <?php foreach($allPersons as $person): ?>
