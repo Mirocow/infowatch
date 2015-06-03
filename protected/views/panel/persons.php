@@ -46,12 +46,6 @@
         </div>
     </div>
     <div class="col-md-8 main-persons">
-        <div class="col-md-12">
-            <div class="btn-group" role="group">
-                <button type="button" class="btn btn-default" id="add-person-btn"><i class="fa fa-plus"></i></button>
-                <button type="button" class="btn btn-default" id="remove-person-btn"><i class="fa fa-close"></i></button>
-            </div>
-        </div>
         <div class="col-md-12" id="details">
 
         </div>
@@ -224,7 +218,7 @@
 
         $(this).find('input:first').trigger('click');
     });
-    $('#add-group-btn').click(function(e){
+    $(document).on('click','#add-group-btn',function(e){
         var instance = $('#jstree').jstree(true);
         var parentNode = instance.get_node(instance.get_selected(true)[0]);
 
@@ -253,9 +247,10 @@
                 $('#jstree').jstree(true).set_type($node, "group");
                 $('#jstree').jstree(true).set_text($node, "Новая группа");
                 $('#jstree').jstree(true).edit($node);
+                drawGroup(null);
             });
     });
-    $('#edit-group-btn').click(function(){
+    $(document).on('click','#edit-group-btn',function(){
         $.post(
             Yii.app.createUrl('/ajax/getGroup'),
             {
@@ -299,28 +294,30 @@
                 $('#editGroupModal').modal('show');
             });
     });
-    $('#remove-group-btn').click(function(){
-        var tree = $('#jstree').jstree(true);
 
-        $node = tree.get_selected()[0];
-        $parent = tree.get_parent($node);
+    $(document).on('click', '#remove-group-btn', function(){
 
-        if ($node != "root") {
-            var children = tree.get_children_dom($node);
-
-            for(var i = 0; i < children.length; i++)
+        var url = Yii.app.createUrl('/ajax/deleteGroup');
+        var ids = [];
+        var checkedCheckboxes = $('.group-checkbox:checked');
+        $(checkedCheckboxes).each(function(index, checkbox){
+            ids.push($(checkbox).attr('group-id'));
+        });
+        $.post(
+            url,
             {
-                console.log(children[i].id);
-                tree.move_node(children[i].id, $parent);
+                id:  JSON.stringify(ids)
             }
-            tree.delete_node($node);
-            tree.select_node($parent);
+        ).done(function(response){
+                var instance = $('#jstree').jstree(true);
 
-        } else {
-            alert("Вы не можете удалить корневую папку!");
-        }
+                $(checkedCheckboxes).each(function(index, checkbox) {
+                    instance.delete_node($('li[group_id='+$(checkbox).attr('group-id')+']').attr('id'));
+                    $(checkbox).parent().parent().remove();
+                });
+            });
     });
-    $('#add-person-btn').click(function(){
+    $(document).on('click', '#add-person-btn', function(){
         var instance = $('#jstree').jstree(true);
         var parentNode = instance.get_node(instance.get_selected(true)[0]);
 
@@ -364,6 +361,30 @@
             $('.check-all-persons').prop('checked', false);
 
     });
+    $(document).on('change', '.check-all-groups', function(e){
+        if($(this).prop('checked'))
+        {
+            $('.group-checkbox').each(function(index, checkbox){
+                $(checkbox).prop('checked', true);
+            });
+        }
+        else {
+            $('.group-checkbox').each(function(index, checkbox){
+                $(checkbox).prop('checked', false);
+            });
+        }
+    });
+
+    $(document).on('click', '.group-checkbox', function(e) {
+        e.stopPropagation();
+    });
+    $(document).on('change', '.group-checkbox', function(e){
+        e.stopPropagation();
+
+        if($('.check-all-groups').prop('checked'))
+            $('.check-all-groups').prop('checked', false);
+
+    });
     $(document).on('click', '.person-button', function(e){
         e.preventDefault();
         e.stopPropagation();
@@ -376,79 +397,77 @@
         });
         showUserForm(id);
     });
-    $(document).ready(function(){
-        $('#remove-person-btn').click(function(){
+    $(document).on('click', '#remove-person-btn', function(){
 
-            var url = Yii.app.createUrl('/ajax/deletePerson');
-            var ids = [];
-            var checkedCheckboxes = $('.person-checkbox:checked');
-            $(checkedCheckboxes).each(function(index, checkbox){
-                ids.push($(checkbox).attr('person-id'));
-            });
-            $.post(
-                url,
-                {
-                    id:  JSON.stringify(ids)
-                }
-            ).done(function(response){
+        var url = Yii.app.createUrl('/ajax/deletePerson');
+        var ids = [];
+        var checkedCheckboxes = $('.person-checkbox:checked');
+        $(checkedCheckboxes).each(function(index, checkbox){
+            ids.push($(checkbox).attr('person-id'));
+        });
+        $.post(
+            url,
+            {
+                id:  JSON.stringify(ids)
+            }
+        ).done(function(response){
                 $(checkedCheckboxes).each(function(index, checkbox) {
                     $(checkbox).parent().parent().remove();
                 });
             });
-        });
-        $('#edit-person').click(function(){
-            showUserForm(personId);
-        });
-        $('#save-person').click(function(){
-            var form = new FormData($('#edit-person-form')[0]);
+    });
+    $(document).on('click', '#edit-person', function(){
+        showUserForm(personId);
+    });
+    $(document).on('click', '#save-person', function(){
+        var form = new FormData($('#edit-person-form')[0]);
 
-            var request = $.ajax({
-                url: Yii.app.createUrl('/ajax/savePerson'),
-                type: "POST",
-                processData: false,
-                cache: false,
-                contentType: false,
-                data: form
-            });
-            request.done(function(response) {
-                response = JSON.parse(response);
-                drawGroup(response.group_id);
-                //drawUser(response.id);
-                //$('#jstree li[person_id=' + response.id + '] a').html('<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image: url(<?=Yii::app()->request->baseUrl?>/img/user.png); background-size: auto; background-position: 50% 50%;"></i>' + response.name);
-                $('#editPersonModal').modal('hide');
-            });
+        var request = $.ajax({
+            url: Yii.app.createUrl('/ajax/savePerson'),
+            type: "POST",
+            processData: false,
+            cache: false,
+            contentType: false,
+            data: form
         });
-        $('#save-group').click(function(){
-            var form = new FormData($('#edit-group-form')[0]);
-
-            var request = $.ajax({
-                url: Yii.app.createUrl('/ajax/saveGroup'),
-                type: "POST",
-                processData: false,
-                cache: false,
-                contentType: false,
-                data: form
-            });
-            request.done(function(response) {
-                response = JSON.parse(response);
-                drawGroup(response.id);
-                $('#jstree li[group_id=' + response.id + '] a').html('<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image: url(<?=Yii::app()->request->baseUrl?>/img/folder_tm.png); background-size: auto; background-position: 50% 50%;"></i>' + response.name);
-                $('#editGroupModal').modal('hide');
-            });
+        request.done(function(response) {
+            response = JSON.parse(response);
+            drawGroup(response.group_id);
+            //drawUser(response.id);
+            //$('#jstree li[person_id=' + response.id + '] a').html('<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image: url(<?=Yii::app()->request->baseUrl?>/img/user.png); background-size: auto; background-position: 50% 50%;"></i>' + response.name);
+            $('#editPersonModal').modal('hide');
         });
+    });
+    $(document).on('click', '#save-group', function(){
+        var form = new FormData($('#edit-group-form')[0]);
 
-        $('#edit-group-form i').click(function() {
-            var checkbox = $(this).parent().find('input[type=checkbox]');
-
-            if($(checkbox).prop('checked')) {
-                $(checkbox).prop('checked', false);
-                $(this).removeClass('fa-toggle-on').removeClass('text-success').addClass('fa-toggle-off').addClass('text-danger');
-            }
-            else {
-                $(checkbox).prop('checked', true);
-                $(this).addClass('fa-toggle-on').addClass('text-success').removeClass('fa-toggle-off').removeClass('text-danger');
-            }
+        var request = $.ajax({
+            url: Yii.app.createUrl('/ajax/saveGroup'),
+            type: "POST",
+            processData: false,
+            cache: false,
+            contentType: false,
+            data: form
         });
+        request.done(function(response) {
+            response = JSON.parse(response);
+            drawGroup(response.id);
+            $('#jstree li[group_id=' + response.id + '] a').html('<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image: url(<?=Yii::app()->request->baseUrl?>/img/folder_tm.png); background-size: auto; background-position: 50% 50%;"></i>' + response.name);
+            $('#editGroupModal').modal('hide');
+        });
+    });
+
+    $(document).on('click', '#edit-group-form i', function() {
+        var checkbox = $(this).parent().find('input[type=checkbox]');
+
+        if($(checkbox).prop('checked')) {
+            $(checkbox).prop('checked', false);
+            $(this).removeClass('fa-toggle-on').removeClass('text-success').addClass('fa-toggle-off').addClass('text-danger');
+        }
+        else {
+            $(checkbox).prop('checked', true);
+            $(this).addClass('fa-toggle-on').addClass('text-success').removeClass('fa-toggle-off').removeClass('text-danger');
+        }
     });
 
     function showUserForm(uid)
@@ -560,13 +579,14 @@
             {
                 drawUser(target.node.li_attr.person_id);
             }
-            if(target.node.type == 'group')
-            {
-                drawGroup(target.node.li_attr.group_id);
-            }
             if(target.node.type == 'root')
             {
                 drawGroup(null);
+            }
+            if(target.node.type == 'group')
+            {
+                drawGroup(target.node.li_attr.group_id);
+                groupId = target.node.li_attr.group_id;
             }
         })
         .on('move_node.jstree', function(e, target){
@@ -614,10 +634,11 @@
                     id = $('#'+target.node.id).attr('person_id');
 
                 }
-                else
+                else if(target.node.type == 'group')
                 {
                     url = Yii.app.createUrl('/ajax/renameGroup');
                     id = $('#'+target.node.id).attr('group_id');
+                    drawGroup(null);
                 }
 
                 $.post(
@@ -668,7 +689,7 @@
                     }
                 },
                 "state": { "key": '<%=Request.QueryString["type"]%>_infotree' },
-                "contextmenu" : {
+                /*"contextmenu" : {
                     "items": function ($node) { // Could be a function that should return an object like this one
                         var tree = $("#jstree").jstree(true);
                         return {
@@ -699,7 +720,7 @@
                                                         response = JSON.parse(response);
 
 
-                                                        $node = tree.create_node('root' /*$node*/, {
+                                                        $node = tree.create_node('root' /*$node*//*, {
                                                             "li_attr": {
                                                                 "type": "group",
                                                                 "parent": parent,
@@ -773,7 +794,7 @@
                             }
                         }
                     }
-                },
+                },*/
                 "types" : {
                     '#': {
                         'valid_children': ['group']
@@ -796,7 +817,7 @@
                     'check_while_dragging': true,
                     copy: false
                 },
-                "plugins" : [ "contextmenu", "search", "state", "types", "wholerow", "crrm" ] //dnd
+                "plugins" : ["search", "state", "types", "wholerow", "crrm" ] //dnd, contextmenu
             });
     });
 </script>

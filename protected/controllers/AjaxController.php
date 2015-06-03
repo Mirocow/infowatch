@@ -75,12 +75,13 @@ class AjaxController extends Controller
     {
         if(isset($_POST['id']))
         {
-            $group = Group::model()->findByPk($_POST['id']);
-            if($group)
+            if(isset($_POST['id']))
             {
-                Person::model()->updateAll(['group_id' => null], 'group_id = ' . $_POST['id']);
-                Group::model()->updateAll(['parent_id' => $group->parent_id], 'parent_id = ' . $_POST['id']);
-                Group::model()->deleteByPk($_POST['id']);
+                $ids = json_decode($_POST['id']);
+
+                Person::model()->updateAll(['group_id' => null], 'group_id IN (' . implode(',',$ids) . ')');
+                Group::model()->updateAll(['parent_id' => null]);
+                Group::model()->deleteAll('id IN (' . implode(',',$ids) . ')');
             }
         }
     }
@@ -230,8 +231,9 @@ class AjaxController extends Controller
                 $criteria->condition = 'group_id IS NULL';
 
                 $persons = Person::model()->findAll($criteria);
+                $groups = Group::model()->findAll();
 
-                $response = ['content' => $this->renderPartial('without_group', compact('persons'), true)];
+                $response = ['content' => $this->renderPartial('without_group', compact('persons', 'groups'), true)];
                 echo json_encode($response);
             }
 

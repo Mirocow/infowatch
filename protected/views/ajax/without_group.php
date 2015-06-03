@@ -9,6 +9,40 @@
 /* @var $persons Person[] */
 ?>
 
+<div class="col-md-12">
+    <div class="btn-group" role="group">
+<!--        <button type="button" class="btn btn-default" id="add-group-btn"><i class="fa fa-plus"></i></button>-->
+        <button type="button" class="btn btn-default" id="remove-group-btn"><i class="fa fa-close"></i></button>
+    </div>
+</div>
+<div class="col-md-12 group">
+    <table class="table groups-table table-hover">
+        <thead>
+        <tr>
+            <th class="checkbox-td"><input type="checkbox" class="check-all-groups"/></th>
+            <th>Название</th>
+<!--            <th></th>-->
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach($groups as $group): ?>
+            <tr class="group-row" group-id="<?=$group->id;?>">
+                <td class="checkbox-td"><input type="checkbox" class="group-checkbox" group-id="<?=$group->id?>"/>   </td>
+                <td><?=$group->name;?></td>
+<!--                <td><button type="button" class="btn btn-sm btn-primary group-button" person-id="--><?//=$group->id;?><!--"><i class="fa fa-pencil"></i></button></td>-->
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+
+
+<div class="col-md-12">
+    <div class="btn-group" role="group">
+        <button type="button" class="btn btn-default" id="add-person-btn"><i class="fa fa-plus"></i></button>
+        <button type="button" class="btn btn-default" id="remove-person-btn"><i class="fa fa-close"></i></button>
+    </div>
+</div>
 <div class="col-md-12 group">
     <table class="table persons-table table-hover">
         <thead>
