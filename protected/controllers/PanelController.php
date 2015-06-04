@@ -120,6 +120,7 @@ class PanelController extends Controller {
     public function actionUsers()
     {
         $users = User::model()->findAll();
+        $this->active = 'users';
         $this->render('users', compact('users'));
     }
 

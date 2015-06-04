@@ -21,7 +21,7 @@
         <tr>
             <th class="checkbox-td"><input type="checkbox" class="check-all-groups"/></th>
             <th>Название</th>
-<!--            <th></th>-->
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -29,7 +29,7 @@
             <tr class="group-row" group-id="<?=$group->id;?>">
                 <td class="checkbox-td"><input type="checkbox" class="group-checkbox" group-id="<?=$group->id?>"/>   </td>
                 <td><?=$group->name;?></td>
-<!--                <td><button type="button" class="btn btn-sm btn-primary group-button" person-id="--><?//=$group->id;?><!--"><i class="fa fa-pencil"></i></button></td>-->
+                <td><button type="button" class="btn btn-sm btn-primary group-button" group-id="<?=$group->id;?>"><i class="fa fa-pencil"></i></button></td>
             </tr>
         <?php endforeach; ?>
         </tbody>

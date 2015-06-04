@@ -264,4 +264,29 @@ class AjaxController extends Controller
     {
         User::model()->updateByPk($id, ['role' => $role]);
     }
+
+    public function actionAddUser()
+    {
+        if(isset($_POST['User']))
+        {
+            $user = new User();
+            $user->attributes = $_POST['User'];
+            $user->save();
+
+            print json_encode($user->attributes);
+        }
+    }
+    public function actionUpdateUser()
+    {
+        if(isset($_POST['name']) && isset($_POST['value']) && isset($_POST['pk']))
+        {
+            $user = User::model()->findByPk($_POST['pk']);
+            if($user)
+            {
+                $user->$_POST['name'] = $_POST['value'];
+                $user->save();
+            }
+        }
+        echo $_POST['value'];
+    }
 }

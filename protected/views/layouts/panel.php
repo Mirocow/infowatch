@@ -13,11 +13,13 @@
 <!--	<link rel="stylesheet" type="text/css" href="--><?php //echo Yii::app()->request->baseUrl; ?><!--/css/main.css">-->
 	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/raw.css">
 	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/my.css">
+	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/fw/xedit/css/bootstrap-editable.css">
 
     <script type="application/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/fw/jquery.js"></script>
     <script type="application/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/fw/bootstrap/js/bootstrap.min.js"></script>
     <script type="application/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/fw/jstree/jstree.min.js"></script>
     <script type="application/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/fw/combobox/combobox.js"></script>
+    <script type="application/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/fw/xedit/js/bootstrap-editable.min.js"></script>
 	<title>InfoWatch GSM Monitor</title>
 </head>
 

@@ -251,48 +251,7 @@
             });
     });
     $(document).on('click','#edit-group-btn',function(){
-        $.post(
-            Yii.app.createUrl('/ajax/getGroup'),
-            {
-                id: groupId
-            }
-        ).done(function (response) {
-                response = JSON.parse(response);
-
-                $('#group_name').val(response.name);
-                $('#group_greet_message').val(response.greet_message);
-
-                if(response.voice == '1')
-                {
-                    $('#group_voice').attr('checked', 'checked');
-                }
-                else
-                {
-                    $('#group_voice').removeAttr('checked');
-                }
-
-                if(response.sms == '1')
-                {
-                    $('#group_sms').attr('checked', 'checked');
-                }
-                else
-                {
-                    $('#group_sms').removeAttr('checked');
-                }
-
-                if(response.greet == '1')
-                {
-                    $('#group_greet').attr('checked', 'checked');
-                }
-                else
-                {
-                    $('#group_greet').removeAttr('checked');
-                }
-
-                $('#group_id').val(groupId);
-
-                $('#editGroupModal').modal('show');
-            });
+        showGroupForm(groupId);
     });
 
     $(document).on('click', '#remove-group-btn', function(){
@@ -397,6 +356,18 @@
         });
         showUserForm(id);
     });
+    $(document).on('click', '.group-button', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        e.cancelBubble = true;
+
+        var id = $(this).attr('group-id');
+        $('.check-all-groups').prop('checked', false);
+        $('.group-checkbox').each(function(index, checkbox){
+            $(checkbox).prop('checked', false);
+        });
+        showGroupForm(id);
+    });
     $(document).on('click', '#remove-person-btn', function(){
 
         var url = Yii.app.createUrl('/ajax/deletePerson');
@@ -451,7 +422,15 @@
         });
         request.done(function(response) {
             response = JSON.parse(response);
-            drawGroup(response.id);
+
+            var instance = $('#jstree').jstree(true);
+            var parentNode = instance.get_node(instance.get_selected(true)[0]);
+
+            if(parentNode.type != 'root')
+                drawGroup(response.id);
+            else
+                drawGroup(null);
+
             $('#jstree li[group_id=' + response.id + '] a').html('<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image: url(<?=Yii::app()->request->baseUrl?>/img/folder_tm.png); background-size: auto; background-position: 50% 50%;"></i>' + response.name);
             $('#editGroupModal').modal('hide');
         });
@@ -490,6 +469,52 @@
                 $('#person_id').val(uid);
 
                 $('#editPersonModal').modal('show');
+            });
+    }
+    function showGroupForm(gid)
+    {
+
+        $.post(
+            Yii.app.createUrl('/ajax/getGroup'),
+            {
+                id: gid
+            }
+        ).done(function (response) {
+                response = JSON.parse(response);
+
+                $('#group_name').val(response.name);
+                $('#group_greet_message').val(response.greet_message);
+
+                if(response.voice == '1')
+                {
+                    $('#group_voice').attr('checked', 'checked');
+                }
+                else
+                {
+                    $('#group_voice').removeAttr('checked');
+                }
+
+                if(response.sms == '1')
+                {
+                    $('#group_sms').attr('checked', 'checked');
+                }
+                else
+                {
+                    $('#group_sms').removeAttr('checked');
+                }
+
+                if(response.greet == '1')
+                {
+                    $('#group_greet').attr('checked', 'checked');
+                }
+                else
+                {
+                    $('#group_greet').removeAttr('checked');
+                }
+
+                $('#group_id').val(gid);
+
+                $('#editGroupModal').modal('show');
             });
     }
 </script>
