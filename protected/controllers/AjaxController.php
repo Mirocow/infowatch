@@ -271,9 +271,17 @@ class AjaxController extends Controller
         {
             $user = new User();
             $user->attributes = $_POST['User'];
-            $user->save();
+            $count = User::model()->countByAttributes(['login' => $user->login]);
 
-            print json_encode($user->attributes);
+            if($count)
+            {
+                print json_encode(['error' => 'Логин занят']);
+            }
+            else {
+                $user->save();
+
+                print json_encode($user->attributes);
+            }
         }
     }
     public function actionUpdateUser()
@@ -285,8 +293,8 @@ class AjaxController extends Controller
             {
                 $user->$_POST['name'] = $_POST['value'];
                 $user->save();
+                echo $_POST['value'];
             }
         }
-        echo $_POST['value'];
     }
 }

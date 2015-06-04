@@ -10,8 +10,8 @@
 
 
 <div class="settings-content profile-content col-md-11">
-    <div class="col-md-4 col-md-offset-4" style="margin-top: 50px;">
-        <table class="table users-table">
+    <div class="col-md-6 col-md-offset-3" style="margin-top: 50px;">
+        <table class="table users-table table-striped">
             <thead>
                 <tr>
                     <th>Логин</th>
@@ -23,16 +23,28 @@
             <tbody>
                 <?php foreach($users as $user): ?>
                     <tr user-id="<?=$user->id?>">
-                        <td><a href="#" id="login" data-type="text" data-pk="<?=$user->id?>" class="xedit" data-url="<?=$this->createUrl('/ajax/updateUser')?>"><?=$user->login?></a></td>
+                        <td>
+                            <?php if($user->login == 'admin'): ?>
+                                <?=$user->login?>
+                            <?php else: ?>
+                                <a href="#" id="login" data-type="text" data-pk="<?=$user->id?>" class="xedit" data-url="<?=$this->createUrl('/ajax/updateUser')?>"><?=$user->login?></a>
+                            <?php endif; ?>
+                        </td>
                         <td><a href="#" id="password" data-type="text" data-pk="<?=$user->id?>" class="xedit" data-url="<?=$this->createUrl('/ajax/updateUser')?>"><?=$user->password?></a></td>
                         <td>
-                            <select class="user-role form-control input-sm" user-id="<?=$user->id?>">
-                                <option value="ADMIN" <?=$user->role == 'ADMIN' ? 'selected="selected"' : ''; ?>>Администратор</option>
-                                <option value="OFFICER" <?=$user->role == 'OFFICER' ? 'selected="selected"' : ''; ?>>Офицер</option>
-                            </select>
+                            <?php if($user->login == 'admin'): ?>
+                                Администратор
+                            <?php else: ?>
+                                <select class="user-role form-control input-sm" user-id="<?=$user->id?>">
+                                    <option value="ADMIN" <?=$user->role == 'ADMIN' ? 'selected="selected"' : ''; ?>>Администратор</option>
+                                    <option value="OFFICER" <?=$user->role == 'OFFICER' ? 'selected="selected"' : ''; ?>>Офицер</option>
+                                </select>
+                            <?php endif; ?>
                         </td>
                         <td>
-                            <button class="btn btn-danger btn-sm delete-user" user-id="<?=$user->id?>"><i class="fa fa-close"></i></button>
+                            <?php if($user->login != 'admin'): ?>
+                                <button class="btn btn-danger btn-sm delete-user" user-id="<?=$user->id?>"><i class="fa fa-close"></i></button>
+                            <?php endif; ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -115,36 +127,67 @@
         $('#addUserModal').modal('show');
     });
     $(document).on('click', '#save-user', function() {
-        var form = new FormData($('#add-user-form')[0]);
+        if(validateForm())
+        {
+            var form = new FormData($('#add-user-form')[0]);
 
-        var request = $.ajax({
-            url: Yii.app.createUrl('/ajax/addUser'),
-            type: "POST",
-            processData: false,
-            cache: false,
-            contentType: false,
-            data: form
-        });
-        request.done(function (user) {
-            user = JSON.parse(user);
-            var html = '<tr user-id="' + user.id + '">' +
-                '<td><a href="#" id="login" data-type="text" data-pk="' + user.id + '" class="xedit" data-url="' + Yii.app.createUrl('/ajax/updateUser') + '">' + user.login + '</a></td>' +
-                '<td><a href="#" id="password" data-type="text" data-pk="' + user.id + '" class="xedit" data-url="' + Yii.app.createUrl('/ajax/updateUser') + '">' + user.password + '</a></td>' +
-                '<td>' +
-                '<select class="user-role form-control input-sm" user-id="' + user.id + '">' +
-                '<option value="ADMIN" ' + (user.role == 'ADMIN' ? 'selected="selected"' : '') + '>Администратор</option>' +
-                '<option value="OFFICER" ' + (user.role == 'OFFICER' ? 'selected="selected"' : '') + '>Офицер</option>' +
-                '</select>' +
-                '</td>' +
-                '<td>' +
-                '<button class="btn btn-danger btn-sm delete-user" user-id="' + user.id + '"><i class="fa fa-close"></i></button>' +
-                '</td></tr>';
+            var request = $.ajax({
+                url: Yii.app.createUrl('/ajax/addUser'),
+                type: "POST",
+                processData: false,
+                cache: false,
+                contentType: false,
+                data: form
+            });
+            request.done(function (user) {
+                user = JSON.parse(user);
 
-            $('.users-table tbody').append(html);
+                if(typeof user.error == 'undefined')
+                {
+                    var html = '<tr user-id="' + user.id + '">' +
+                        '<td><a href="#" id="login" data-type="text" data-pk="' + user.id + '" class="xedit" data-url="' + Yii.app.createUrl('/ajax/updateUser') + '">' + user.login + '</a></td>' +
+                        '<td><a href="#" id="password" data-type="text" data-pk="' + user.id + '" class="xedit" data-url="' + Yii.app.createUrl('/ajax/updateUser') + '">' + user.password + '</a></td>' +
+                        '<td>' +
+                        '<select class="user-role form-control input-sm" user-id="' + user.id + '">' +
+                        '<option value="ADMIN" ' + (user.role == 'ADMIN' ? 'selected="selected"' : '') + '>Администратор</option>' +
+                        '<option value="OFFICER" ' + (user.role == 'OFFICER' ? 'selected="selected"' : '') + '>Офицер</option>' +
+                        '</select>' +
+                        '</td>' +
+                        '<td>' +
+                        '<button class="btn btn-danger btn-sm delete-user" user-id="' + user.id + '"><i class="fa fa-close"></i></button>' +
+                        '</td></tr>';
 
-            $('.users-table tbody tr:last .xedit').editable();
+                    $('.users-table tbody').append(html);
 
-            $('#addUserModal').modal('hide');
-        });
+                    $('.users-table tbody tr:last .xedit').editable();
+
+                    $('#addUserModal').modal('hide');
+                    $('#user_login').val('');
+                    $('#user_password').val('');
+                }
+                else
+                {
+                    $('#user_login').parent().parent().addClass('has-error');
+                }
+            });
+        }
     });
+
+    function validateForm()
+    {
+        $('#user_login, #user_password').parent().parent().removeClass('has-error');
+        if($('#user_login').val() == '')
+        {
+            $('#user_login').parent().parent().addClass('has-error');
+            return false;
+        }
+
+        if($('#user_password').val() == '')
+        {
+            $('#user_password').parent().parent().addClass('has-error');
+            return false;
+        }
+
+        return true;
+    }
 </script>

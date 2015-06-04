@@ -7,6 +7,7 @@
  * @property integer $id
  * @property string $login
  * @property string $password
+ * @property string $role
  */
 class User extends CActiveRecord
 {
@@ -31,7 +32,7 @@ class User extends CActiveRecord
 			array('login, password', 'length', 'max'=>45),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, login, password, passwordRepeat', 'safe'),
+			array('id, login, password, passwordRepeat, role', 'safe'),
 		);
 	}
 
