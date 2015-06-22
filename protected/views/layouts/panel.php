@@ -20,6 +20,7 @@
     <script type="application/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/fw/jstree/jstree.min.js"></script>
     <script type="application/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/fw/combobox/combobox.js"></script>
     <script type="application/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/fw/xedit/js/bootstrap-editable.min.js"></script>
+    <script type="application/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/fw/audio.js"></script>
 	<title>InfoWatch GSM Monitor</title>
 </head>
 
