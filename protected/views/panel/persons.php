@@ -15,6 +15,9 @@
     var type = 'group';
     var personId = null;
     var groupId = null;
+
+    var parent = null;
+    var parentNode = '#';
 </script>
 
 <div class="content col-md-11">
@@ -35,11 +38,7 @@
             <div class="col-md-12">
                 <div id="jstree">
                     <ul>
-                        <li id="root" data-jstree='{"type":"root"}'>Группы
-                            <ul>
-                                <?=$tree?>
-                            </ul>
-                        </li>
+                        <?=$tree?>
                     </ul>
                 </div>
             </div>
@@ -212,6 +211,8 @@
     </div>
 </div>
 <script>
+    var selectedNodeId = null;
+    var selectedNode = null;
     $(document).on('click', '.person-row', function(e){
         e.preventDefault();
         e.stopPropagation();
@@ -220,16 +221,26 @@
     });
     $(document).on('click','#add-group-btn',function(e){
         var instance = $('#jstree').jstree(true);
-        var parentNode = instance.get_node(instance.get_selected(true)[0]);
+        //var parentNode = instance.get_node(instance.get_selected(true)[0]);
 
-        var parent = null;
-        if(parentNode.type == 'group')
-            parent = parentNode.li_attr.group_id;
+        parent = null;
+        parentNode = '#';
+        if(selectedNodeId !== null) {
+            if (instance.get_path(selectedNode.node).length == 1) {
+                parent = selectedNode.node.li_attr.group_id;
+                parentNode = selectedNode.node.id;
+            }
+            else if(instance.get_path(selectedNode.node).length > 1)
+            {
+                parent = instance.get_node(instance.get_parent(selectedNode.node)).li_attr.group_id;
+                parentNode = instance.get_node(instance.get_parent(selectedNode.node)).id;
+            }
+        }
 
         $.post(
             Yii.app.createUrl('/ajax/createGroup'),
             {
-                parent: null,
+                parent: parent,
                 name: 'Новая группа'
             }
         ).done(function(response)
@@ -237,10 +248,10 @@
                 response = JSON.parse(response);
 
 
-                $node = $('#jstree').jstree(true).create_node('root', {
+                $node = $('#jstree').jstree(true).create_node(parentNode, {
                     "li_attr": {
                         "type": "group",
-                        "parent": 'root',
+                        "parent": parentNode,
                         "group_id": response.id
                     }
                 });
@@ -520,6 +531,10 @@
 </script>
 
 <script>
+    function nodeDeselected()
+    {
+        $('#details').html('');
+    }
     function drawUser(id)
     {
         personId = id;
@@ -588,6 +603,7 @@
         if(!sel.length) { return false; }
         ref.delete_node(sel);
     };
+
     $(function () {
         var to = false;
         $('#demo_q').keyup(function () {
@@ -600,18 +616,31 @@
 
         $('#jstree')
         .on('select_node.jstree', function(e, target) {
-            if(target.node.type == 'person')
+            if(selectedNodeId == target.node.li_attr.group_id)
             {
-                drawUser(target.node.li_attr.person_id);
+                selectedNode = null;
+                selectedNodeId = null;
+                $('#jstree').jstree(false).deselect_all();
+                alert('deselected');
+                nodeDeselected();
             }
-            if(target.node.type == 'root')
+            else
             {
-                drawGroup(null);
-            }
-            if(target.node.type == 'group')
-            {
-                drawGroup(target.node.li_attr.group_id);
-                groupId = target.node.li_attr.group_id;
+                selectedNodeId = target.node.li_attr.group_id;
+                selectedNode = target;
+                if(target.node.type == 'person')
+                {
+                    drawUser(target.node.li_attr.person_id);
+                }
+                if(target.node.type == 'root')
+                {
+                    drawGroup(null);
+                }
+                if(target.node.type == 'group')
+                {
+                    drawGroup(target.node.li_attr.group_id);
+                    groupId = target.node.li_attr.group_id;
+                }
             }
         })
         .on('move_node.jstree', function(e, target){
@@ -708,6 +737,7 @@
                         // in case of 'rename_node' node_position is filled with the new node name
 
                         if (operation === "move_node") {
+                            return true;
                             return ((node_parent.type === "group" || node_parent.type === "root")); //only allow dropping inside nodes of type 'Parent'
                         }
                         return true;  //allow all other operations
@@ -821,28 +851,28 @@
                     }
                 },*/
                 "types" : {
-                    '#': {
-                        'valid_children': ['group']
-                    },
-                    'root': {
+                    /*'#': {
+                        'valid_children': ['     group']
+                    },*/
+                    /*'root': {
                         "icon": "/img/folder_tm.png",
                         'valid_children ': ['group']
-                    },
+                    },*/
                     "group" : {
                         "icon": "/img/folder_tm.png",
-                        max_depth: 5,
-                        'valid_children ': ['person']
+                        max_depth: 1,
+                        'valid_children ': ['group']
                     },
-                    "person" : {
+                    /*"person" : {
                         "max_children" : 0,
                         "icon": "/img/user.png"
-                    }
+                    }*/
                 },
                 'dnd': {
-                    'check_while_dragging': true,
+                    //'check_while_dragging': true,
                     copy: false
                 },
-                "plugins" : ["search", "state", "types", "wholerow", "crrm" ] //dnd, contextmenu
+                "plugins" : ["search", "state", "types", "wholerow", "crrm","dnd" ] //dnd, contextmenu
             });
     });
 </script>
