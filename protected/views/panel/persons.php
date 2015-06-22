@@ -9,6 +9,7 @@
 /* @var $persons Person[] */
 /* @var $allPersons Person[] */
 /* @var $form CActiveForm */
+/* @var $groups string[] */
 
 ?>
 <script>
@@ -132,6 +133,12 @@
                             <?php echo $form->labelEx($person,'imsi', ['class' => 'col-md-3 control-label']); ?>
                             <div class="col-md-9">
                                 <?php echo $form->textField($person,'imsi', ['class' => 'form-control', 'id' => 'person_imsi', 'disabled' => 'disabled']); ?>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <?php echo $form->labelEx($person,'group_id', ['class' => 'col-md-3 control-label']); ?>
+                            <div class="col-md-9">
+                                <?php echo $form->dropDownList($person,'group_id', $groups, ['class' => 'form-control', 'id' => 'person_group']); ?>
                             </div>
                         </div>
                         <div class="form-group">
@@ -288,24 +295,7 @@
             });
     });
     $(document).on('click', '#add-person-btn', function(){
-        var instance = $('#jstree').jstree(true);
-        var parentNode = instance.get_node(instance.get_selected(true)[0]);
-
-        var parent = null;
-        if(parentNode.type == 'group')
-            parent = parentNode.li_attr.group_id;
-
-        $.post(
-            Yii.app.createUrl('/ajax/createPerson'),
-            {
-                groupId: parent
-            }
-        ).done(function(response)
-            {
-                response = JSON.parse(response);
-
-                showUserForm(response.id);
-            });
+        showUserForm(null);
     });
     $(document).on('change', '.check-all-persons', function(e){
         if($(this).prop('checked'))
@@ -462,25 +452,50 @@
 
     function showUserForm(uid)
     {
-        $.post(
-            Yii.app.createUrl('/ajax/getPerson'),
-            {
-                id: uid
-            }
-        ).done(function (response) {
-                response = JSON.parse(response);
+        if(uid == null)
+        {
+            var instance = $('#jstree').jstree(true);
+            var parentNode = instance.get_node(instance.get_selected(true)[0]);
 
-                $('#person_name').val(response.name);
-                $('#person_job').val(response.job);
-                $('#person_department').val(response.department);
-                $('#person_boss').val(response.boss);
-                $('#person_phone').val(response.phone);
-                $('#person_imsi').val(response.imsi);
-                $('#person_info').val(response.info);
-                $('#person_id').val(uid);
+            var parent = null;
+            if(parentNode.type == 'group')
+                parent = parentNode.li_attr.group_id;
 
-                $('#editPersonModal').modal('show');
-            });
+            $('#person_name').val('');
+            $('#person_job').val('');
+            $('#person_department').val('');
+            $('#person_boss').val('');
+            $('#person_phone').val('');
+            $('#person_imsi').val('');
+            $('#person_info').val('');
+            $('#person_id').val(null);
+            $('#person_group option[value='+parent+']').prop('selected', true);
+
+            $('#editPersonModal').modal('show');
+        }
+        else
+        {
+            $.post(
+                Yii.app.createUrl('/ajax/getPerson'),
+                {
+                    id: uid
+                }
+            ).done(function (response) {
+                    response = JSON.parse(response);
+
+                    $('#person_name').val(response.name);
+                    $('#person_job').val(response.job);
+                    $('#person_department').val(response.department);
+                    $('#person_boss').val(response.boss);
+                    $('#person_phone').val(response.phone);
+                    $('#person_imsi').val(response.imsi);
+                    $('#person_info').val(response.info);
+                    $('#person_id').val(uid);
+                    $('#person_group option[value='+response.group_id+']').prop('selected', true);
+
+                    $('#editPersonModal').modal('show');
+                });
+        }
     }
     function showGroupForm(gid)
     {

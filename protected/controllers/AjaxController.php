@@ -168,7 +168,11 @@ class AjaxController extends Controller
     {
         if(isset($_POST['Person']))
         {
-            $person = Person::model()->findByPk($_POST['Person']['id']);
+            if($_POST['Person']['id'])
+                $person = Person::model()->findByPk($_POST['Person']['id']);
+            else
+                $person = new Person();
+
             $person->attributes = $_POST['Person'];
             $person->save();
             echo json_encode($person->attributes);

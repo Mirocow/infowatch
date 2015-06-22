@@ -54,8 +54,10 @@ class PanelController extends Controller {
         
         $allPersons = Person::model()->findAll();
 
+        $groups = CHtml::listData(Group::model()->findAll(),'id','name');
+
         $this->active = 'persons';
-        $this->render('persons', compact('persons', 'allPersons', 'tree'));
+        $this->render('persons', compact('persons', 'allPersons', 'tree', 'groups'));
     }
 
     public function displayTree($groups)

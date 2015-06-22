@@ -394,8 +394,8 @@
             });
             request.done(function(operator) {
                 operator = JSON.parse(operator);
-
-                $('.operators-table tbody').append('<tr class="operator-row" operator-id="' + operator.id + '"><td>' + operator.id + '</td><td>' + operator.name + '</td><td>' + operator.mcc + '</td><td>' + operator.mnc + '</td><td>' + operator.arfcn + '</td><td>' + operator.textStatus + '</td></tr>');
+                var operatorPos = $('#operator-row').length + 1;
+                $('.operators-table tbody').append('<tr class="operator-row" operator-id="' + operator.id + '"><td>' + operatorPos + '</td><td>' + operator.name + '</td><td>' + operator.mcc + '</td><td>' + operator.mnc + '</td><td>' + operator.arfcn + '</td><td>' + operator.textStatus + '</td></tr>');
 
                 $('#operatorModal').modal('hide');
                 $('#editOperator').attr('disabled','disabled');
@@ -415,6 +415,7 @@
                 }
             ).done(function(response){
                     $('.operators-table tbody tr.active').remove();
+
                     var i = 1;
                     $('.operators-table tbody tr').each(function(index, row){
                         $(row).find('td:first').text(i);
