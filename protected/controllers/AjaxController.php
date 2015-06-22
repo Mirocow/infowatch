@@ -23,10 +23,19 @@ class AjaxController extends Controller
     }
     public function actionCreateGroup()
     {
-        if(isset($_POST['parent']) && isset($_POST['name']))
-        {
+        if(isset($_POST['parent']) && isset($_POST['name'])) {
             $group = new Group();
             $group->name = $_POST['name'];
+            if ($_POST['parent'])
+            {
+                $parentGroup = Group::model()->findByPk($_POST['parent']);
+                if($parentGroup);
+                {
+                    $group->sms = $parentGroup->sms;
+                    $group->voice = $parentGroup->voice;
+                    $group->greet = $parentGroup->greet;
+                }
+            }
             $group->parent_id = $_POST['parent'];
             $group->save();
 

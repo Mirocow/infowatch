@@ -737,8 +737,13 @@
                         // in case of 'rename_node' node_position is filled with the new node name
 
                         if (operation === "move_node") {
+                            if(typeof node_parent.li_attr == 'undefined')
+                                return true;
+                            else
+                                if(node_parent.li_attr.group_id == 1)
+                                    return false;
                             return true;
-                            return ((node_parent.type === "group" || node_parent.type === "root")); //only allow dropping inside nodes of type 'Parent'
+                            //return ((node_parent.type === "group" && node_parent.li_attr.group_id != 1)); //only allow dropping inside nodes of type 'Parent'
                         }
                         return true;  //allow all other operations
                     }
@@ -869,7 +874,7 @@
                     }*/
                 },
                 'dnd': {
-                    //'check_while_dragging': true,
+                    'check_while_dragging': true,
                     copy: false
                 },
                 "plugins" : ["search", "state", "types", "wholerow", "crrm","dnd" ] //dnd, contextmenu
