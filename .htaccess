@@ -1,0 +1,10 @@
+<FilesMatch "\.(?i:mp3)$">
+  ForceType application/octet-stream
+  Header set Content-Disposition attachment
+</FilesMatch>
+<FilesMatch "\.(?i:wav)$">
+  ForceType application/octet-stream
+  Header set Content-Disposition attachment
+</FilesMatch>
+
+AddType application/octet-stream .wav

@@ -31,6 +31,11 @@
                     <i class="fa fa-volume-up"></i> Настройки VoIP
                 </a>
             </li>
+            <li class="link-container">
+                <a href="#hdd" data-toggle="tab">
+                    <i class="fa fa-hdd-o"></i> Память
+                </a>
+            </li>
             <!--<li class="link-container">
                 <a href="#gsm" data-toggle="tab">
                     <i class="fa fa-wifi"></i> Настройки GSM
@@ -188,8 +193,18 @@
                     </div>
                 </section>
             </div>
-            <div class="tab-pane fade" id="gsm">
-
+            <div class="tab-pane fade" id="hdd">
+                <?php
+                    $percent = 100 - round(disk_free_space('/') / disk_total_space("/") * 100);
+                ?>
+                <div class="col-md-12">
+                    <b>Свободное место на диске:</b> <?= round(floatval(disk_free_space("/") / 1024 / 1024 / 1024), 2)?> GB
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: <?=$percent?>%;">
+                            <?=$percent?>%
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="tab-pane fade" id="voip"><section>
                     <div class="settings--wrapper">

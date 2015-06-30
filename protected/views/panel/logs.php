@@ -59,12 +59,18 @@
                             </td>
                             <td class="text-center">
                                 <?php if($log->attachment): ?>
-                                    <audio preload="auto" controls>
-                                        <source src="<?=Yii::app()->request->baseUrl.'/attachments/'.$log->attachment?>" />
-                                    </audio>
+                                    <button class="btn btn-xs btn-success log-button" attachment="<?=$log->attachment?>">
+                                        <i class="fa fa-info"></i>
+                                    </button>
                                 <?php endif; ?>
-                                <?=$log->attachment ? CHtml::link('<i class="fa fa-download fa-2x pull-right"></i>',$this->createUrl('/site/download',['file' => $log->attachment])) : '';?>
                             </td>
+                            <!--    <?php /*if($log->attachment): */?>
+                                    <audio preload="auto" controls>
+                                        <source src="<?/*=Yii::app()->request->baseUrl.'/attachments/'.$log->attachment*/?>" />
+                                    </audio>
+                                <?php /*endif; */?>
+                                <?/*=$log->attachment ? CHtml::link('<i class="fa fa-download fa-2x pull-right"></i>',$this->createUrl('/site/download',['file' => $log->attachment])) : '';*/?>
+                            </td>-->
                         </tr>
                     <?php endforeach; ?>
                     </tbody>
@@ -73,6 +79,36 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="attachmentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12 modal-container text-center">
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<script>
+    $(document).on('click', '.log-button', function(){
+        var button = $(this);
+        $('#attachmentModal .modal-container').html(
+            '<audio preload="auto" controls><source src="/attachments/' + $(button).attr('attachment') + '"/></audio>' +
+            '<div class="col-md-12 text-center"><a href="/attachments/' + $(button).attr('attachment') + '" class="btn btn-success"><i class="fa fa-download"></i></a></div>'
+        );
+
+        $('#attachmentModal').modal('show');
+    })
+</script>
 <style>
 
 
